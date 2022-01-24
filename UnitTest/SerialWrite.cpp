@@ -1,4 +1,7 @@
-void setup()
+#include "UnitTest.h"
+#include <Arduino.h>
+
+void SerialWriteTest::setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
@@ -9,7 +12,7 @@ void setup()
     }
 }
 
-void loop()
+void SerialWriteTest::loop()
 {
     digitalWrite(LED_BUILTIN, HIGH);
     Serial.println("Serial writing from Arduino");
