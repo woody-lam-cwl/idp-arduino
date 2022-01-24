@@ -1,3 +1,5 @@
+#include "../Constants.h"
+#include "../Modules/Motor.h"
 #include "../UnitTest/UnitTest.h"
 
 TestCollection tests;

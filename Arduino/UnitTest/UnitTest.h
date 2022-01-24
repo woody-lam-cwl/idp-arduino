@@ -1,9 +1,8 @@
 #ifndef UnitTest_H
 #define UnitTest_H
 
+#include "../Constants.h"
 #include <Arduino.h>
-
-#define BAUD_RATE 115200
 
 class BaseTest {
     public:
