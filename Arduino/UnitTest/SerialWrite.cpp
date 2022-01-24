@@ -4,7 +4,7 @@
 void SerialWriteTest::setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
-    Serial.begin(115200);
+    Serial.begin(BAUD_RATE);
     digitalWrite(LED_BUILTIN, LOW);
     while (!Serial)
     {
