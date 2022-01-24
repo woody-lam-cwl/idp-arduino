@@ -10,9 +10,8 @@ class MotorController {
         Adafruit_MotorShield motorShield;
         Adafruit_DCMotor *leftMotor;
         Adafruit_DCMotor *rightMotor;
-
     public:
-        MotorController();
+        void setup();
 };
 
 class ServoController {
