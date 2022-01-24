@@ -1,7 +1,7 @@
-bool ledState;
-unsigned long lastChangedTime;
+#include "UnitTest.h"
+#include <Arduino.h>
 
-void setup()
+void ArduinoTest::setup()
 {
     ledState = false;
     lastChangedTime = 0;
@@ -9,7 +9,7 @@ void setup()
     digitalWrite(LED_BUILTIN, LOW);
 }
 
-void loop()
+void ArduinoTest::loop()
 {
     unsigned long currentTime = millis();
     if (currentTime - lastChangedTime > 500)
