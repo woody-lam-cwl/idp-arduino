@@ -12,6 +12,7 @@
 #define LEFT_MOTOR_FLIP_DIRECTION   false
 #define RIGHT_MOTOR_FLIP_DIRECTION  false
 #define LEFT_TO_RIGHT_POWER_RATIO   1
+#define SERVO_PIN                   9
 
 #define ULTRASONIC_TRIGGER_PIN      12
 #define ULTRASONIC_ECHO_PIN         13

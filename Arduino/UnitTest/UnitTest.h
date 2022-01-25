@@ -3,6 +3,7 @@
 
 #include <String.h>
 #include <Arduino.h>
+#include <Servo.h>
 #include <Adafruit_MotorShield.h>
 #include "../Constants.h"
 #include "../Modules/Logger.h"
@@ -68,6 +69,11 @@ class ServoTest : BaseTest {
     public:
         void setup();
         void loop();
+    
+    private:
+        Servo servo;
+        byte position;
+        bool isReverse;
 };
 
 /** Test for line sensors */
@@ -85,25 +91,25 @@ class LineSensorTest : BaseTest {
 
 /** Test for ultrasonic sensor */
 class UltrasonicTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+
     private:
         Logger *logger;
         unsigned long pulseDuration;
         unsigned long distanceInMM;
-
-    public:
-        void setup();
-        void loop();
 };
 
 /** Test for infrared sensor */
 class InfraRedTest : BaseTest {
-    private:
-        Logger *logger;
-        int sensorReading;
-
     public:
         void setup();
         void loop();
+
+    private:
+        Logger *logger;
+        int sensorReading;
 };
 
 class TestCollection {
