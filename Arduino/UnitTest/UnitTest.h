@@ -33,11 +33,27 @@ class SerialReadTest : BaseTest {
         void loop();
 };
 
+/** Test for serial writing communication with bluetooth connection */
+class BTSerialWriteTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
+/** Test for serial reading communication with bluetooth connection */
+class BTSerialReadTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
 class TestCollection {
     public:
         ArduinoTest arduinoTest;
         SerialWriteTest serialWriteTest;
         SerialReadTest serialReadTest;
+        BTSerialWriteTest btSerialWriteTest;
+        BTSerialReadTest btSerialReadTest;
 };
 
 #endif

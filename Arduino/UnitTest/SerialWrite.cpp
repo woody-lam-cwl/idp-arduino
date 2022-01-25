@@ -1,15 +1,11 @@
 #include "UnitTest.h"
-#include <Arduino.h>
 
 void SerialWriteTest::setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(BAUD_RATE);
     digitalWrite(LED_BUILTIN, LOW);
-    while (!Serial)
-    {
-        ;
-    }
+    while (!Serial);
 }
 
 void SerialWriteTest::loop()

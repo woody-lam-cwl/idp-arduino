@@ -1,5 +1,4 @@
 #include "UnitTest.h"
-#include <Arduino.h>
 
 void ArduinoTest::setup()
 {
