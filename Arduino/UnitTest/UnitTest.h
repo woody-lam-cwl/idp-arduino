@@ -1,9 +1,11 @@
 #ifndef UnitTest_H
 #define UnitTest_H
 
+#include <String.h>
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
 #include "../Constants.h"
+#include "../Modules/Logger.h"
 
 class BaseTest {
     public:
@@ -68,21 +70,26 @@ class ServoTest : BaseTest {
         void loop();
 };
 
-/** Test for servo attached to motor shield */
+/** Test for line sensors */
 class LineSensorTest : BaseTest {
     public:
         void setup();
         void loop();
 };
 
-/** Test for servo attached to motor shield */
+/** Test for ultrasonic sensor */
 class UltrasonicTest : BaseTest {
+    private:
+        Logger *logger;
+        unsigned long pulseDuration;
+        unsigned long distanceInMM;
+
     public:
         void setup();
         void loop();
 };
 
-/** Test for servo attached to motor shield */
+/** Test for infrared sensor */
 class InfraRedTest : BaseTest {
     public:
         void setup();

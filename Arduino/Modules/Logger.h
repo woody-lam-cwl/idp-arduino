@@ -2,6 +2,7 @@
 #define Logger_H
 
 #include <Arduino.h>
+#include <String.h>
 #include "../Constants.h"
 
 enum LoggerLevel {
@@ -15,8 +16,8 @@ class Logger {
     private:
         String prefix[4] = {"Debug: ", "Info: ", "Error: ", "Fatal: "};
     public:
-        void setup();
-        void log(char message[], LoggerLevel level);
+        void setup(String initMessage);
+        void log(String message, LoggerLevel level);
 };
 
 #endif

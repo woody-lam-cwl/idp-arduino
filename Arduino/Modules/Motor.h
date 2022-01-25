@@ -19,7 +19,7 @@ class MotorController {
 
 class ServoController {
     private:
-        Logger logger;
+        Logger *logger;
     public:
         ServoController(Logger *logger);
         void setup();
