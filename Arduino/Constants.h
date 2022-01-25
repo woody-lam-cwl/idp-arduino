@@ -13,10 +13,13 @@
 
 #define LEFT_MOTOR_PORT             1
 #define RIGHT_MOTOR_PORT            2
-#define LEFT_MOTOR_FLIP_DIRECTION   false
-#define RIGHT_MOTOR_FLIP_DIRECTION  false
+#define LEFT_MOTOR_NO_FLIP          true
+#define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1
+
 #define SERVO_PIN                   9
+#define SERVO_GRAB_ANGLE            90
+#define SERVO_IDLE_ANGLE            0
 
 #define ULTRASONIC_TRIGGER_PIN      12
 #define ULTRASONIC_ECHO_PIN         13

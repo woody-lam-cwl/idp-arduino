@@ -13,13 +13,13 @@ void MotorTest::setup()
 void MotorTest::loop()
 {
     leftMotor->setSpeed(200);
-    leftMotor->run((LEFT_MOTOR_FLIP_DIRECTION)? BACKWARD : FORWARD);
+    leftMotor->run((LEFT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
     delay(1000);
     leftMotor->run(RELEASE);
     delay(1000);
     digitalWrite(LED_BUILTIN, LOW);
     rightMotor->setSpeed(200);
-    rightMotor->run((RIGHT_MOTOR_FLIP_DIRECTION)? BACKWARD : FORWARD);
+    rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
     delay(1000);
     rightMotor->run(RELEASE);
     delay(1000);
