@@ -1,8 +1,9 @@
 #ifndef UnitTest_H
 #define UnitTest_H
 
-#include "../Constants.h"
 #include <Arduino.h>
+#include <Adafruit_MotorShield.h>
+#include "../Constants.h"
 
 class BaseTest {
     public:
@@ -12,9 +13,11 @@ class BaseTest {
 
 /** Blinking LED test for fundamental Arduino response */
 class ArduinoTest : BaseTest {
-    public:
+    private:
         bool ledState;
         unsigned long lastChangedTime;
+
+    public:
         void setup();
         void loop();
 };
@@ -47,6 +50,24 @@ class BTSerialReadTest : BaseTest {
         void loop();
 };
 
+/** Test for two motors attached to motor shield */
+class MotorTest : BaseTest {
+    private:
+        Adafruit_DCMotor *leftMotor;
+        Adafruit_DCMotor *rightMotor;
+        
+    public:
+        void setup();
+        void loop();
+};
+
+/** Test for servo attached to motor shield */
+class ServoTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
 class TestCollection {
     public:
         ArduinoTest arduinoTest;
@@ -54,6 +75,8 @@ class TestCollection {
         SerialReadTest serialReadTest;
         BTSerialWriteTest btSerialWriteTest;
         BTSerialReadTest btSerialReadTest;
+        MotorTest motorTest;
+        ServoTest servoTest;
 };
 
 #endif
