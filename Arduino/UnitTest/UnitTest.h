@@ -15,13 +15,13 @@ class BaseTest {
 
 /** Blinking LED test for fundamental Arduino response */
 class ArduinoTest : BaseTest {
-    private:
-        bool ledState;
-        unsigned long lastChangedTime;
-
     public:
         void setup();
         void loop();
+
+    private:
+        bool ledState;
+        unsigned long lastChangedTime;
 };
 
 /** Test for serial writing communication with wired connection */
@@ -54,13 +54,13 @@ class BTSerialReadTest : BaseTest {
 
 /** Test for two motors attached to motor shield */
 class MotorTest : BaseTest {
-    private:
-        Adafruit_DCMotor *leftMotor;
-        Adafruit_DCMotor *rightMotor;
-
     public:
         void setup();
         void loop();
+
+    private:
+        Adafruit_DCMotor *leftMotor;
+        Adafruit_DCMotor *rightMotor;
 };
 
 /** Test for servo attached to motor shield */
@@ -75,6 +75,12 @@ class LineSensorTest : BaseTest {
     public:
         void setup();
         void loop();
+
+    private:
+        Logger *logger;
+        byte sensor1Reading;
+        byte sensor2Reading;
+        byte sensor3Reading;
 };
 
 /** Test for ultrasonic sensor */
@@ -91,6 +97,10 @@ class UltrasonicTest : BaseTest {
 
 /** Test for infrared sensor */
 class InfraRedTest : BaseTest {
+    private:
+        Logger *logger;
+        int sensorReading;
+
     public:
         void setup();
         void loop();
