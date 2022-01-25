@@ -55,7 +55,7 @@ class MotorTest : BaseTest {
     private:
         Adafruit_DCMotor *leftMotor;
         Adafruit_DCMotor *rightMotor;
-        
+
     public:
         void setup();
         void loop();
@@ -63,6 +63,27 @@ class MotorTest : BaseTest {
 
 /** Test for servo attached to motor shield */
 class ServoTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
+/** Test for servo attached to motor shield */
+class LineSensorTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
+/** Test for servo attached to motor shield */
+class UltrasonicTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
+/** Test for servo attached to motor shield */
+class InfraRedTest : BaseTest {
     public:
         void setup();
         void loop();
@@ -77,6 +98,9 @@ class TestCollection {
         BTSerialReadTest btSerialReadTest;
         MotorTest motorTest;
         ServoTest servoTest;
+        LineSensorTest lineSensorTest;
+        UltrasonicTest ultrasonicTest;
+        InfraRedTest infraRedTest;
 };
 
 #endif
