@@ -53,6 +53,13 @@ class BTSerialReadTest : BaseTest {
         void loop();
 };
 
+/** Test for three LEDs used in motion */
+class LEDTest : BaseTest {
+    public:
+        void setup();
+        void loop();
+};
+
 /** Test for two motors attached to motor shield */
 class MotorTest : BaseTest {
     public:
@@ -119,6 +126,7 @@ class TestCollection {
         SerialReadTest serialReadTest;
         BTSerialWriteTest btSerialWriteTest;
         BTSerialReadTest btSerialReadTest;
+        LEDTest ledTest;
         MotorTest motorTest;
         ServoTest servoTest;
         LineSensorTest lineSensorTest;

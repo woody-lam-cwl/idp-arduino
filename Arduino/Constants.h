@@ -7,6 +7,10 @@
 #define WIRED_SERIAL_ENABLED        false
 #define BLUETOOTH_SERIAL_ENABLED    true
 
+#define AMBER_LED_PIN               2
+#define RED_LED_PIN                 3
+#define BLUE_LED_PIN                4
+
 #define LEFT_MOTOR_PORT             1
 #define RIGHT_MOTOR_PORT            2
 #define LEFT_MOTOR_FLIP_DIRECTION   false
