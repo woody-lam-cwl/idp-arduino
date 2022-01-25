@@ -1,9 +1,8 @@
 #include "UnitTest.h"
 
-void InfraRedTest::setup()
+void InfraRedTest::setup(Logger *logger)
 {
-    Logger logger;
-    this->logger = &logger;
+    this->logger = logger;
     this->logger->setup("Infrared test initialised");
 }
 

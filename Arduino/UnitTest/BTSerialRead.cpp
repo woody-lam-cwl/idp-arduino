@@ -2,7 +2,7 @@
 
 // NINA Component to be setup using SerialToSerialBT programme before use
 
-void BTSerialReadTest::setup()
+void BTSerialReadTest::setup(Logger *logger = nullptr)
 {
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(NINA_RESETN, OUTPUT);

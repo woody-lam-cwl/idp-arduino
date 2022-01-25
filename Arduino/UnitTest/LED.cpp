@@ -1,6 +1,6 @@
 #include "UnitTest.h"
 
-void LEDTest::setup()
+void LEDTest::setup(Logger *logger = nullptr)
 {
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);

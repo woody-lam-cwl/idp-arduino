@@ -1,13 +1,17 @@
 #include "../Constants.h"
-#include "../Modules/Motor.h"
-#include "../UnitTest/UnitTest.h"
+#include "../Modules/Motion.h"
+#include "../RuntimeTest/RuntimeTest.h"
 
-TestCollection tests;
+RuntimeTest *runtimeTest;
 
-void setup() {
-    tests.arduinoTest.setup();
+void setup()
+{
+    bool bluetoothMode = true;
+    RuntimeTest test(bluetoothMode);
+    runtimeTest = &test;
 }
 
-void loop() {
-    tests.arduinoTest.loop();
+void loop()
+{
+    runtimeTest->testLoop();
 }

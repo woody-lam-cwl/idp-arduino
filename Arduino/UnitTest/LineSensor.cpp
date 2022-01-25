@@ -1,9 +1,8 @@
 #include "UnitTest.h"
 
-void LineSensorTest::setup()
+void LineSensorTest::setup(Logger *logger)
 {
-    Logger logger;
-    this->logger = &logger;
+    this->logger = logger;
     pinMode(LINE_SENSOR_1_PIN, INPUT);
     pinMode(LINE_SENSOR_2_PIN, INPUT);
     pinMode(LINE_SENSOR_3_PIN, INPUT);

@@ -10,14 +10,14 @@
 
 class BaseTest {
     public:
-        virtual void setup();
+        virtual void setup(Logger *logger);
         virtual void loop();
 };
 
 /** Blinking LED test for fundamental Arduino response */
 class ArduinoTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 
     private:
@@ -28,42 +28,42 @@ class ArduinoTest : BaseTest {
 /** Test for serial writing communication with wired connection */
 class SerialWriteTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with wired connection */
 class SerialReadTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial writing communication with bluetooth connection */
 class BTSerialWriteTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with bluetooth connection */
 class BTSerialReadTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for three LEDs used in motion */
 class LEDTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for two motors attached to motor shield */
 class MotorTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
 
     private:
@@ -74,7 +74,7 @@ class MotorTest : BaseTest {
 /** Test for servo attached to motor shield */
 class ServoTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger = nullptr);
         void loop();
     
     private:
@@ -86,7 +86,7 @@ class ServoTest : BaseTest {
 /** Test for line sensors */
 class LineSensorTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger);
         void loop();
 
     private:
@@ -99,7 +99,7 @@ class LineSensorTest : BaseTest {
 /** Test for ultrasonic sensor */
 class UltrasonicTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger);
         void loop();
 
     private:
@@ -111,27 +111,12 @@ class UltrasonicTest : BaseTest {
 /** Test for infrared sensor */
 class InfraRedTest : BaseTest {
     public:
-        void setup();
+        void setup(Logger *logger);
         void loop();
 
     private:
         Logger *logger;
         int sensorReading;
-};
-
-class TestCollection {
-    public:
-        ArduinoTest arduinoTest;
-        SerialWriteTest serialWriteTest;
-        SerialReadTest serialReadTest;
-        BTSerialWriteTest btSerialWriteTest;
-        BTSerialReadTest btSerialReadTest;
-        LEDTest ledTest;
-        MotorTest motorTest;
-        ServoTest servoTest;
-        LineSensorTest lineSensorTest;
-        UltrasonicTest ultrasonicTest;
-        InfraRedTest infraRedTest;
 };
 
 #endif

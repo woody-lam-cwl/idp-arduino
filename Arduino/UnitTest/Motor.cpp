@@ -1,6 +1,6 @@
 #include "UnitTest.h"
 
-void MotorTest::setup()
+void MotorTest::setup(Logger *logger = nullptr)
 {
     Adafruit_MotorShield motorShield = Adafruit_MotorShield();
     leftMotor = motorShield.getMotor(LEFT_MOTOR_PORT);

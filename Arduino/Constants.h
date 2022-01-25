@@ -4,8 +4,7 @@
 #include <Arduino.h>
 
 #define BAUD_RATE                   115200
-#define WIRED_SERIAL_ENABLED        false
-#define BLUETOOTH_SERIAL_ENABLED    true
+#define WIRED_SERIAL_OVERRIDE       false
 
 #define AMBER_LED_PIN               2
 #define RED_LED_PIN                 3

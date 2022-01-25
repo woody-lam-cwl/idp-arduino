@@ -1,6 +1,6 @@
 #include "UnitTest.h"
 
-void SerialReadTest::setup()
+void SerialReadTest::setup(Logger *logger = nullptr)
 {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(BAUD_RATE);

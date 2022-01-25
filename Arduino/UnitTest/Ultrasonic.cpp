@@ -1,9 +1,8 @@
 #include "UnitTest.h"
 
-void UltrasonicTest::setup()
+void UltrasonicTest::setup(Logger *logger)
 {
-    Logger logger;
-    this->logger = &logger;
+    this->logger = logger;
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
     pinMode(ULTRASONIC_ECHO_PIN, INPUT);

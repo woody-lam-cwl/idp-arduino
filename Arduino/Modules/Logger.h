@@ -13,11 +13,14 @@ enum LoggerLevel {
 };
 
 class Logger {
-    private:
-        String prefix[4] = {"Debug: ", "Info: ", "Error: ", "Fatal: "};
     public:
+        Logger(bool bluetoothMode);
         void setup(String initMessage);
         void log(String message, LoggerLevel level);
+
+    private:
+        bool bluetoothMode;
+        String prefix[4] = {"Debug: ", "Info: ", "Error: ", "Fatal: "};
 };
 
 #endif

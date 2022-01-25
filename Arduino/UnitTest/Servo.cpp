@@ -1,6 +1,6 @@
 #include "UnitTest.h"
 
-void ServoTest::setup()
+void ServoTest::setup(Logger *logger = nullptr)
 {
     position = 0;
     servo.attach(SERVO_PIN);

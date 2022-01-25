@@ -1,14 +1,17 @@
 #include "Logger.h"
 
+Logger::Logger(bool bluetoothMode) {
+    this->bluetoothMode = bluetoothMode && !WIRED_SERIAL_OVERRIDE;
+}
+
 void Logger::setup(String initMessage) {
-    if (BLUETOOTH_SERIAL_ENABLED || !SerialNina) {
+    if (bluetoothMode && !SerialNina) {
         pinMode(NINA_RESETN, OUTPUT);
         digitalWrite(NINA_RESETN, LOW);
         SerialNina.begin(BAUD_RATE);
         while (!SerialNina);
     }
-
-    if (WIRED_SERIAL_ENABLED || !Serial) {
+    else if (!Serial) {
         Serial.begin(BAUD_RATE);
         while (!Serial);
     }
@@ -19,6 +22,6 @@ void Logger::setup(String initMessage) {
 
 void Logger::log(String message, LoggerLevel level = LoggerLevel::Debug) {
     String messagePrefix = prefix[level];
-    if (BLUETOOTH_SERIAL_ENABLED) SerialNina.println(messagePrefix + message);
-    if (WIRED_SERIAL_ENABLED) Serial.println(messagePrefix + message);
+    if (bluetoothMode) SerialNina.println(messagePrefix + message);
+    else Serial.println(messagePrefix + message);
 }

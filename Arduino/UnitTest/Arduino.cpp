@@ -1,6 +1,6 @@
 #include "UnitTest.h"
 
-void ArduinoTest::setup()
+void ArduinoTest::setup(Logger *logger = nullptr)
 {
     ledState = false;
     lastChangedTime = 0;
