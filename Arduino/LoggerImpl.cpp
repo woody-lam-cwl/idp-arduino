@@ -5,13 +5,13 @@ Logger::Logger(bool bluetoothMode) {
 }
 
 void Logger::setup(String initMessage) {
-    if (bluetoothMode && !SerialNina) {
+    if (bluetoothMode) {
         pinMode(NINA_RESETN, OUTPUT);
         digitalWrite(NINA_RESETN, LOW);
         SerialNina.begin(BAUD_RATE);
         while (!SerialNina);
     }
-    else if (!Serial) {
+    else {
         Serial.begin(BAUD_RATE);
         while (!Serial);
     }

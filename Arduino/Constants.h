@@ -10,8 +10,8 @@
 #define RED_LED_PIN                 3
 #define BLUE_LED_PIN                4
 
-#define LEFT_MOTOR_PORT             1
-#define RIGHT_MOTOR_PORT            2
+#define LEFT_MOTOR_PORT             3
+#define RIGHT_MOTOR_PORT            4
 #define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1

@@ -4,7 +4,9 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <Adafruit_MotorShield.h>
-#include "../Constants.h"
+#include <Wire.h>
+#include "utility/Adafruit_MS_PWMServoDriver.h"
+#include "Constants.h"
 #include "Logger.h"
 
 class MotorController {

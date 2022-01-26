@@ -5,8 +5,10 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <Adafruit_MotorShield.h>
-#include "../Constants.h"
-#include "../Modules/Logger.h"
+#include <Wire.h>
+#include "utility/Adafruit_MS_PWMServoDriver.h"
+#include "Constants.h"
+#include "Logger.h"
 
 class BaseTest {
     public:
@@ -21,6 +23,7 @@ class ArduinoTest : BaseTest {
         void loop();
 
     private:
+        Logger *logger;
         bool ledState;
         unsigned long lastChangedTime;
 };
@@ -67,8 +70,11 @@ class MotorTest : BaseTest {
         void loop();
 
     private:
+        Adafruit_MotorShield *motorShield;
         Adafruit_DCMotor *leftMotor;
         Adafruit_DCMotor *rightMotor;
+        Adafruit_DCMotor *motor3;
+        Adafruit_DCMotor *motor4;
 };
 
 /** Test for servo attached to motor shield */
