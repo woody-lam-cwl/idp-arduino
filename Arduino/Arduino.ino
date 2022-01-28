@@ -3,7 +3,7 @@
 #include "RuntimeTest.h"
 
 Logger* logger;
-LEDTest* testPtr;
+BaseTest* testPtr;
 
 void setup()
 {
@@ -11,7 +11,7 @@ void setup()
     Logger loggerObj(bluetoothMode);
     logger = &loggerObj;
     logger->setup("Test Initialised");
-    LEDTest test;
+    MotorTest test;
     testPtr = &test;
     testPtr->setup(logger);
 }

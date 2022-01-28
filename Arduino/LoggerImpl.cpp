@@ -21,6 +21,7 @@ void Logger::setup(String initMessage) {
 }
 
 void Logger::log(String message, LoggerLevel level = LoggerLevel::Debug) {
+    String prefix[4] = {"Debug: ", "Info: ", "Error: ", "Fatal: "};
     String messagePrefix = prefix[level];
     if (bluetoothMode) SerialNina.println(messagePrefix + message);
     else Serial.println(messagePrefix + message);

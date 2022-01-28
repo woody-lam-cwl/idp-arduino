@@ -12,73 +12,71 @@
 
 class BaseTest {
     public:
-        virtual void setup(Logger *logger);
-        virtual void loop();
+        virtual void setup(Logger *logger) = 0;
+        virtual void loop() = 0;
 };
 
 /** Blinking LED test for fundamental Arduino response */
-class ArduinoTest : BaseTest {
+class ArduinoTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 
     private:
-        Logger *logger;
         bool ledState;
         unsigned long lastChangedTime;
 };
 
 /** Test for serial writing communication with wired connection */
-class SerialWriteTest : BaseTest {
+class SerialWriteTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with wired connection */
-class SerialReadTest : BaseTest {
+class SerialReadTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial writing communication with bluetooth connection */
-class BTSerialWriteTest : BaseTest {
+class BTSerialWriteTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with bluetooth connection */
-class BTSerialReadTest : BaseTest {
+class BTSerialReadTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for three LEDs used in motion */
-class LEDTest : BaseTest {
+class LEDTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for two motors attached to motor shield */
-class MotorTest : BaseTest {
+class MotorTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 
     private:
+        Logger *logger;
         Adafruit_MotorShield *motorShield;
         Adafruit_DCMotor *leftMotor;
         Adafruit_DCMotor *rightMotor;
-        Adafruit_DCMotor *motor3;
-        Adafruit_DCMotor *motor4;
 };
 
 /** Test for servo attached to motor shield */
-class ServoTest : BaseTest {
+class ServoTest : public BaseTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
@@ -90,7 +88,7 @@ class ServoTest : BaseTest {
 };
 
 /** Test for line sensors */
-class LineSensorTest : BaseTest {
+class LineSensorTest : public BaseTest {
     public:
         void setup(Logger *logger);
         void loop();
@@ -103,7 +101,7 @@ class LineSensorTest : BaseTest {
 };
 
 /** Test for ultrasonic sensor */
-class UltrasonicTest : BaseTest {
+class UltrasonicTest : public BaseTest {
     public:
         void setup(Logger *logger);
         void loop();
@@ -115,7 +113,7 @@ class UltrasonicTest : BaseTest {
 };
 
 /** Test for infrared sensor */
-class InfraRedTest : BaseTest {
+class InfraRedTest : public BaseTest {
     public:
         void setup(Logger *logger);
         void loop();

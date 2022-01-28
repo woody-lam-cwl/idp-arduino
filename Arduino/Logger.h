@@ -20,7 +20,6 @@ class Logger {
 
     private:
         bool bluetoothMode;
-        String prefix[4] = {"Debug: ", "Info: ", "Error: ", "Fatal: "};
 };
 
 #endif

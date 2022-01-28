@@ -1,8 +1,7 @@
 #include "UnitTest.h"
 
-void ArduinoTest::setup(Logger *logger)
+void ArduinoTest::setup(Logger *logger = nullptr)
 {
-    this->logger = logger;
     ledState = false;
     lastChangedTime = 0;
     pinMode(LED_BUILTIN, OUTPUT);
@@ -12,7 +11,6 @@ void ArduinoTest::setup(Logger *logger)
 void ArduinoTest::loop()
 {
     unsigned long currentTime = millis();
-    logger->log(String(currentTime), LoggerLevel::Debug);
     if (currentTime - lastChangedTime > 500)
     {
         lastChangedTime = currentTime;
@@ -129,28 +127,34 @@ void LEDTest::loop()
 
 void MotorTest::setup(Logger *logger = nullptr)
 {
-    motorShield = &Adafruit_MotorShield();
+    this->logger = logger;
+    motorShield = new Adafruit_MotorShield();
+
+    if (!motorShield->begin()) {
+        logger->log("Could not find Motor Shield. Check wiring.", Error);
+        while (1);
+    }
+    logger->log("Motor Shield found.", Info);
+
     leftMotor = motorShield->getMotor(LEFT_MOTOR_PORT);
     rightMotor = motorShield->getMotor(RIGHT_MOTOR_PORT);
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
-    motorShield->begin();
 }
 
 void MotorTest::loop()
-{
-    leftMotor->setSpeed(200);
+{   
+    leftMotor->setSpeed(100);
     leftMotor->run((LEFT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
     delay(1000);
     leftMotor->run(RELEASE);
     delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
-    rightMotor->setSpeed(200);
+    logger->log("Checkpoint 1", Debug);
+
+    rightMotor->setSpeed(100);
     rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
     delay(1000);
     rightMotor->run(RELEASE);
     delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH);
+    logger->log("Checkpoint 2", Debug);
 }
 
 void ServoTest::setup(Logger *logger = nullptr)
@@ -199,6 +203,7 @@ void UltrasonicTest::setup(Logger *logger)
 
 void UltrasonicTest::loop()
 {
+    delay(500);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, HIGH);
     delayMicroseconds(10);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
@@ -210,7 +215,6 @@ void UltrasonicTest::loop()
     }
     String message = "Ultrasonic sensor measured: " + String(distanceInMM, DEC);
     logger->log(message, LoggerLevel::Info);
-    delay(500);
 }
 
 void InfraRedTest::setup(Logger *logger)
