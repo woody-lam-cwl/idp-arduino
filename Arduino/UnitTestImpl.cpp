@@ -128,16 +128,16 @@ void LEDTest::loop()
 void MotorTest::setup(Logger *logger = nullptr)
 {
     this->logger = logger;
-    motorShield = new Adafruit_MotorShield();
+    motorShield = Adafruit_MotorShield();
 
-    if (!motorShield->begin()) {
+    if (!motorShield.begin()) {
         logger->log("Could not find Motor Shield. Check wiring.", Error);
         while (1);
     }
     logger->log("Motor Shield found.", Info);
 
-    leftMotor = motorShield->getMotor(LEFT_MOTOR_PORT);
-    rightMotor = motorShield->getMotor(RIGHT_MOTOR_PORT);
+    leftMotor = motorShield.getMotor(LEFT_MOTOR_PORT);
+    rightMotor = motorShield.getMotor(RIGHT_MOTOR_PORT);
 }
 
 void MotorTest::loop()
@@ -147,14 +147,11 @@ void MotorTest::loop()
     delay(1000);
     leftMotor->run(RELEASE);
     delay(1000);
-    logger->log("Checkpoint 1", Debug);
-
     rightMotor->setSpeed(100);
     rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
     delay(1000);
     rightMotor->run(RELEASE);
     delay(1000);
-    logger->log("Checkpoint 2", Debug);
 }
 
 void ServoTest::setup(Logger *logger = nullptr)
@@ -179,7 +176,7 @@ void LineSensorTest::setup(Logger *logger)
     pinMode(LINE_SENSOR_1_PIN, INPUT);
     pinMode(LINE_SENSOR_2_PIN, INPUT);
     pinMode(LINE_SENSOR_3_PIN, INPUT);
-    this->logger->setup("Line sensor test initialised");
+    this->logger->log("Line sensor test initialised", Info);
 }
 
 void LineSensorTest::loop()
@@ -198,7 +195,7 @@ void UltrasonicTest::setup(Logger *logger)
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
     pinMode(ULTRASONIC_ECHO_PIN, INPUT);
-    this->logger->setup("Ultrasonic test initialised");
+    this->logger->log("Ultrasonic test initialised", Info);
 }
 
 void UltrasonicTest::loop()
@@ -220,7 +217,7 @@ void UltrasonicTest::loop()
 void InfraRedTest::setup(Logger *logger)
 {
     this->logger = logger;
-    this->logger->setup("Infrared test initialised");
+    this->logger->log("Infrared test initialised", Info);
 }
 
 void InfraRedTest::loop()

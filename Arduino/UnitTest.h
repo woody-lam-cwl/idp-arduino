@@ -70,7 +70,7 @@ class MotorTest : public BaseTest {
 
     private:
         Logger *logger;
-        Adafruit_MotorShield *motorShield;
+        Adafruit_MotorShield motorShield;
         Adafruit_DCMotor *leftMotor;
         Adafruit_DCMotor *rightMotor;
 };
