@@ -138,20 +138,31 @@ void MotorTest::setup(Logger *logger = nullptr)
 
     leftMotor = motorShield.getMotor(LEFT_MOTOR_PORT);
     rightMotor = motorShield.getMotor(RIGHT_MOTOR_PORT);
+
+    leftMotor->setSpeed(255);
+    leftMotor->run((LEFT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
+    rightMotor->setSpeed(255);
+    rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
 }
 
 void MotorTest::loop()
-{   
-    leftMotor->setSpeed(100);
+{       
+    leftMotor->setSpeed(255);
     leftMotor->run((LEFT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
-    delay(1000);
-    leftMotor->run(RELEASE);
-    delay(1000);
-    rightMotor->setSpeed(100);
+    rightMotor->setSpeed(255);
     rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
-    delay(1000);
-    rightMotor->run(RELEASE);
-    delay(1000);
+    delay(200);
+
+    // leftMotor->setSpeed(100);
+    // leftMotor->run((LEFT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
+    // delay(1000);
+    // leftMotor->run(RELEASE);
+    // delay(1000);
+    // rightMotor->setSpeed(100);
+    // rightMotor->run((RIGHT_MOTOR_NO_FLIP)? FORWARD : BACKWARD);
+    // delay(1000);
+    // rightMotor->run(RELEASE);
+    // delay(1000);
 }
 
 void ServoTest::setup(Logger *logger = nullptr)
@@ -173,18 +184,18 @@ void ServoTest::loop()
 void LineSensorTest::setup(Logger *logger)
 {
     this->logger = logger;
-    pinMode(LINE_SENSOR_1_PIN, INPUT);
-    pinMode(LINE_SENSOR_2_PIN, INPUT);
-    pinMode(LINE_SENSOR_3_PIN, INPUT);
+    pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
+    pinMode(LINE_SENSOR_CENTER_PIN, INPUT);
+    pinMode(LINE_SENSOR_RIGHT_PIN, INPUT);
     this->logger->log("Line sensor test initialised", Info);
 }
 
 void LineSensorTest::loop()
 {
-    sensor1Reading = digitalRead(LINE_SENSOR_1_PIN);
-    sensor2Reading = digitalRead(LINE_SENSOR_2_PIN);
-    sensor3Reading = digitalRead(LINE_SENSOR_3_PIN);
-    String message = "Line sensor reading: " + String(sensor1Reading, DEC) + " " + String(sensor2Reading, DEC) + " " + String(sensor3Reading, DEC);
+    leftSensorReading = digitalRead(LINE_SENSOR_LEFT_PIN);
+    centerSensorReading = digitalRead(LINE_SENSOR_CENTER_PIN);
+    rightSensorReading = digitalRead(LINE_SENSOR_RIGHT_PIN);
+    String message = "Line sensor reading: " + String(leftSensorReading, DEC) + " " + String(centerSensorReading, DEC) + " " + String(rightSensorReading, DEC);
     logger->log(message, LoggerLevel::Info);
     delay(500);
 }

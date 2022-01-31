@@ -6,22 +6,23 @@
 #include "Logger.h"
 #include "UnitTest.h"
 
-enum class TestState : byte {
+enum TestState : byte {
     Idle,
     Initialising,
     Running,
     Stopping
 };
 
-enum class TestType : byte {
-    NoTest,
-    LED,
-    Motor,
-    Servo,
-    LineSensor,
-    Ultrasonic,
-    InfraRed
+enum TestType : byte {
+    NoTest = 17U,
+    TestLED = 18U,
+    TestMotor = 19U,
+    TestServo = 20U,
+    TestLineSensor = 21U,
+    TestUltrasonic = 22U,
+    TestInfraRed = 23U
 };
+
 
 class RuntimeTest {
     public:
@@ -31,10 +32,9 @@ class RuntimeTest {
     private:
         Logger *logger;
         TestState currentState;
-        BaseTest *currentTest;
+        IUnitTest *currentTest;
         void handleSerialIn(byte byteIn);
-        void handleState(byte byteIn);
-        void handleTest(byte byteIn);
+        IUnitTest* handleTest(byte byteIn);
 };
 
 #endif

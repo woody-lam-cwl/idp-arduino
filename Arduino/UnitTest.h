@@ -10,14 +10,14 @@
 #include "Constants.h"
 #include "Logger.h"
 
-class BaseTest {
+class IUnitTest {
     public:
         virtual void setup(Logger *logger) = 0;
         virtual void loop() = 0;
 };
 
 /** Blinking LED test for fundamental Arduino response */
-class ArduinoTest : public BaseTest {
+class ArduinoTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
@@ -28,42 +28,42 @@ class ArduinoTest : public BaseTest {
 };
 
 /** Test for serial writing communication with wired connection */
-class SerialWriteTest : public BaseTest {
+class SerialWriteTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with wired connection */
-class SerialReadTest : public BaseTest {
+class SerialReadTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial writing communication with bluetooth connection */
-class BTSerialWriteTest : public BaseTest {
+class BTSerialWriteTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for serial reading communication with bluetooth connection */
-class BTSerialReadTest : public BaseTest {
+class BTSerialReadTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for three LEDs used in motion */
-class LEDTest : public BaseTest {
+class LEDTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
 };
 
 /** Test for two motors attached to motor shield */
-class MotorTest : public BaseTest {
+class MotorTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
@@ -76,7 +76,7 @@ class MotorTest : public BaseTest {
 };
 
 /** Test for servo attached to motor shield */
-class ServoTest : public BaseTest {
+class ServoTest : public IUnitTest {
     public:
         void setup(Logger *logger = nullptr);
         void loop();
@@ -88,20 +88,20 @@ class ServoTest : public BaseTest {
 };
 
 /** Test for line sensors */
-class LineSensorTest : public BaseTest {
+class LineSensorTest : public IUnitTest {
     public:
         void setup(Logger *logger);
         void loop();
 
     private:
         Logger *logger;
-        byte sensor1Reading;
-        byte sensor2Reading;
-        byte sensor3Reading;
+        byte leftSensorReading;
+        byte centerSensorReading;
+        byte rightSensorReading;
 };
 
 /** Test for ultrasonic sensor */
-class UltrasonicTest : public BaseTest {
+class UltrasonicTest : public IUnitTest {
     public:
         void setup(Logger *logger);
         void loop();
@@ -113,7 +113,7 @@ class UltrasonicTest : public BaseTest {
 };
 
 /** Test for infrared sensor */
-class InfraRedTest : public BaseTest {
+class InfraRedTest : public IUnitTest {
     public:
         void setup(Logger *logger);
         void loop();

@@ -9,17 +9,36 @@
 #include "Constants.h"
 #include "Logger.h"
 
+enum class Direction : byte {
+    Drive,
+    Reverse,
+    Neutral
+};
+
+class Motor {
+    public:
+        Motor(Adafruit_DCMotor *motorAdr, bool motorIsNotFlipped);
+        void setMotion(Direction direction, byte speed = 0U);
+
+    private:
+        Adafruit_DCMotor motor;
+        bool motorIsNotFlipped;
+        Direction direction;
+        byte speed;
+        bool isNewCommand(Direction direction, byte speed = 0U);
+};
+
 class MotorController {
     public:
         void setup(Logger *logger);
-        void moveForward(byte speed);
-        void rotate(byte clockwiseAngle);
+        void goStraight();
+        void adjustHeading(bool shouldTurnLeft);
+        void rotate(bool shouldTurnLeft);
 
     private:
-        Adafruit_DCMotor *motors[2];
         Logger *logger;
-        byte motorSpeeds[2];
-        byte motorDirections[2];
+        Motor leftMotor;
+        Motor rightMotor;
 };
 
 class ServoController {

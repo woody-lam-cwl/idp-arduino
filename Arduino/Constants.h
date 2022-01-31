@@ -12,9 +12,11 @@
 
 #define LEFT_MOTOR_PORT             3
 #define RIGHT_MOTOR_PORT            4
-#define LEFT_MOTOR_NO_FLIP          true
+#define LEFT_MOTOR_NO_FLIP          false
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1
+#define CRUISE_SPEED                150
+#define ADJUSTMENT_SPEED            180
 
 #define SERVO_PIN                   9
 #define SERVO_GRAB_ANGLE            90
@@ -33,8 +35,8 @@
 #define IR_LOWER_BOUND_VOLTAGE      0.5
 #define IR_UPPER_BOUND_VOLTAGE      2.5
 
-#define LINE_SENSOR_1_PIN           5
-#define LINE_SENSOR_2_PIN           6
-#define LINE_SENSOR_3_PIN           7
+#define LINE_SENSOR_LEFT_PIN        5
+#define LINE_SENSOR_CENTER_PIN      6
+#define LINE_SENSOR_RIGHT_PIN       7
 
 #endif
