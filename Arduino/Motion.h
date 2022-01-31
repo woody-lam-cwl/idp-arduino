@@ -17,7 +17,7 @@ enum class Direction : byte {
 
 class Motor {
     public:
-        Motor(Adafruit_DCMotor *motorAdr, bool motorIsNotFlipped);
+        void setup(Adafruit_DCMotor *motorAdr, bool motorIsNotFlipped);
         void setMotion(Direction direction, byte speed = 0U);
 
     private:

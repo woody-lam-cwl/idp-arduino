@@ -1,6 +1,6 @@
 #include "Motion.h"
 
-Motor::Motor(Adafruit_DCMotor* motorAdr, bool motorIsNotFlipped)
+void Motor::setup(Adafruit_DCMotor* motorAdr, bool motorIsNotFlipped)
 {
     motor = *motorAdr;
     this->motorIsNotFlipped = motorIsNotFlipped;
@@ -48,8 +48,9 @@ void MotorController::setup(Logger *logger)
     motorShield.begin();
     Adafruit_DCMotor *leftMotorAdr = motorShield.getMotor(LEFT_MOTOR_PORT);
     Adafruit_DCMotor *rightMotorAdr = motorShield.getMotor(RIGHT_MOTOR_PORT);
-    leftMotor = Motor(leftMotorAdr, LEFT_MOTOR_NO_FLIP);
-    rightMotor = Motor(rightMotorAdr, LEFT_MOTOR_NO_FLIP);
+    Motor leftMotor, rightMotor;
+    leftMotor.setup(leftMotorAdr, LEFT_MOTOR_NO_FLIP);
+    rightMotor.setup(rightMotorAdr, LEFT_MOTOR_NO_FLIP);
     logger->log("Motor controller initialised", LoggerLevel::Info);
 }
 
