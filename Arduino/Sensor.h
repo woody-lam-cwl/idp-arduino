@@ -25,4 +25,13 @@ class LineSensor {
         Logger *logger;
 };
 
+class UltrasonicSensor {
+    public:
+        void setup(Logger *logger);
+        unsigned long getDistanceInMM();
+
+    private:
+        Logger *logger;
+};
+
 #endif

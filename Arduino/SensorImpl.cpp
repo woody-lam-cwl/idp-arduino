@@ -6,7 +6,7 @@ void LineSensor::setup(Logger *logger)
     pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
     pinMode(LINE_SENSOR_CENTER_PIN, INPUT);
     pinMode(LINE_SENSOR_RIGHT_PIN, INPUT);
-    this->logger->log("Line follower initialised", LoggerLevel::Info);
+    this->logger->log("Line sensor initialised", LoggerLevel::Info);
 }
 
 LineReading LineSensor::getLineReading()
@@ -22,4 +22,29 @@ LineReading LineSensor::getLineReading()
     reading += rightSensorReading;
 
     return (LineReading) reading;
+}
+
+void UltrasonicSensor::setup(Logger *logger)
+{
+    this->logger = logger;
+    pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
+    digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
+    pinMode(ULTRASONIC_ECHO_PIN, INPUT);
+    this->logger->log("Ultrasonic sensor initialised", Info);
+}
+
+unsigned long UltrasonicSensor::getDistanceInMM()
+{
+    digitalWrite(ULTRASONIC_TRIGGER_PIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
+    unsigned long pulseDuration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_TIMEOUT_US);
+    unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
+    if (distanceInMM < ULTRASONIC_LOWER_BOUND || distanceInMM > ULTRASONIC_UPPER_BOUND) {
+        logger->log("Invalid reading from ultrasonic sensor", LoggerLevel::Error);
+        return 0;
+    }
+    String message = "Ultrasonic sensor measured: " + String(distanceInMM, DEC);
+    logger->log(message, LoggerLevel::Info);
+    return distanceInMM;
 }

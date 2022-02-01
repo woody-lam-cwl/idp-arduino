@@ -108,8 +108,6 @@ class UltrasonicTest : public IUnitTest {
 
     private:
         Logger *logger;
-        unsigned long pulseDuration;
-        unsigned long distanceInMM;
 };
 
 /** Test for infrared sensor */

@@ -215,8 +215,8 @@ void UltrasonicTest::loop()
     digitalWrite(ULTRASONIC_TRIGGER_PIN, HIGH);
     delayMicroseconds(10);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
-    pulseDuration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_TIMEOUT_US);
-    distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
+    unsigned long pulseDuration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_TIMEOUT_US);
+    unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
     if (distanceInMM < ULTRASONIC_LOWER_BOUND || distanceInMM > ULTRASONIC_UPPER_BOUND) {
         logger->log("Invalid reading from ultrasonic sensor", LoggerLevel::Error);
         return;
