@@ -15,28 +15,38 @@ enum class Direction : byte {
     Neutral
 };
 
+enum class Color : byte {
+    Red,
+    Blue
+};
+
 class Motor {
     public:
-        void setup(Adafruit_DCMotor *motorAdr, bool motorIsNotFlipped);
+        Motor();
+        Motor(Logger *logger, Adafruit_DCMotor *motorAdr, bool motorIsNotFlipped);
         void setMotion(Direction direction, byte speed = 0U);
 
     private:
-        Adafruit_DCMotor motor;
+        Logger *logger;
+        Adafruit_DCMotor *motorAdr;
         bool motorIsNotFlipped;
         Direction direction;
         byte speed;
+        byte getMotorDirection(Direction direction);
         bool isNewCommand(Direction direction, byte speed = 0U);
 };
 
 class MotorController {
     public:
-        void setup(Logger *logger);
+        MotorController(Logger *logger);
         void goStraight();
         void adjustHeading(bool shouldTurnLeft);
         void rotate(bool shouldTurnLeft);
+        void release();
 
     private:
         Logger *logger;
+        Adafruit_MotorShield motorShield;
         Motor leftMotor;
         Motor rightMotor;
 };
@@ -50,6 +60,20 @@ class ServoController {
     private:
         Logger *logger;
         Servo servo;
+};
+
+class LEDController {
+    public:
+        void setup(Logger *logger);
+        void flashAmber();
+        void stopAmber();
+        void toggleLED(Color color, bool state);
+
+    private:
+        Logger *logger;
+        unsigned int amberFlashPeriod;
+        unsigned long lastAmberFlashTime;
+        bool AmberLED;
 };
 
 #endif

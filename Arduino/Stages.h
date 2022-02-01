@@ -21,17 +21,20 @@ class IStage {
 
 class LineTracing : public IStage {
     public:
-        LineTracing(MotorController *motorController, LineSensor *LineSensor);
+        LineTracing(Logger *logger, MotorController *motorController, LineSensor *lineSensor, LEDController *ledController);
         void loop();
 
     private:
+        Logger *logger;
         MotorController *motorController;
         LineSensor *lineSensor;
+        LEDController *ledController;
         LineStatus getLineStatus();
 };
 
 class Turning : public IStage {
     public:
+        Turning(MotorController *motorController, LineSensor *lineSensor);
         void loop();
     
     private:

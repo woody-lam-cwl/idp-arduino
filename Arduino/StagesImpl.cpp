@@ -1,9 +1,12 @@
 #include "Stages.h"
 
-LineTracing::LineTracing(MotorController *motorController, LineSensor *lineSensor)
+LineTracing::LineTracing(Logger *logger, MotorController *motorController, LineSensor *lineSensor, LEDController *ledController)
 {
+    this->logger = logger;
     this->motorController = motorController;
     this->lineSensor = lineSensor;
+    this->ledController = ledController;
+    logger->log("Line tracing stage instantiated", LoggerLevel::Info);
 }
 
 void LineTracing::loop()
@@ -11,6 +14,7 @@ void LineTracing::loop()
     LineStatus status = getLineStatus();
     bool shouldTurnLeft = false;
 
+    ledController->flashAmber();
     switch (status) {
         case LineStatus::TooRight:
             shouldTurnLeft = true;

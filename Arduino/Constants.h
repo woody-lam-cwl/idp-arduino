@@ -9,14 +9,16 @@
 #define AMBER_LED_PIN               2
 #define RED_LED_PIN                 3
 #define BLUE_LED_PIN                4
+#define AMBER_LED_FREQUENCY         2
 
 #define LEFT_MOTOR_PORT             3
 #define RIGHT_MOTOR_PORT            4
-#define LEFT_MOTOR_NO_FLIP          false
+#define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1
 #define CRUISE_SPEED                150
-#define ADJUSTMENT_SPEED            180
+#define ADJUSTMENT_INNER_SPEED      90
+#define ADJUSTMENT_OUTER_SPEED      180
 
 #define SERVO_PIN                   9
 #define SERVO_GRAB_ANGLE            90

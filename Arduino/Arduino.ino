@@ -7,6 +7,7 @@ Logger* logger;
 IUnitTest* testPtr;
 IStage* stagePtr;
 MotorController* motorPtr;
+LEDController* ledPtr;
 LineSensor* lineSensorPtr;
 
 void setup()
@@ -14,27 +15,35 @@ void setup()
     bool bluetoothMode = false;
     Logger loggerObj(bluetoothMode);
     logger = &loggerObj;
-    logger->setup("System Initialised");
+    logger->setup("System Initialising");
 
-    MotorController motorController;
-    motorController.setup(logger);
+    MotorController motorController(logger);
     LineSensor lineSensor;
     lineSensor.setup(logger);
+    LEDController ledController;
+    ledController.setup(logger);
 
     motorPtr = &motorController;
     lineSensorPtr = &lineSensor;
+    ledPtr = &ledController;
 
-    LineTracing lineTracingStage(motorPtr, lineSensorPtr);
-    stagePtr = &lineTracingStage;
+    // LineTracing lineTracingStage(logger, motorPtr, lineSensorPtr, ledPtr);
+    // stagePtr = &lineTracingStage;
 
-    // InfraRedTest test;
+    // LineSensorTest test;
     // testPtr = &test;
     // testPtr->setup(logger);
+
+    logger->log("System Initialised", Info);
 }
 
 void loop()
 {
-    stagePtr->loop();
-
+    // logger->log("In loop", Info);
+    // stagePtr->loop();
     // testPtr->loop();
+    // motorPtr->goStraight();
+    // while(1);
+
+    ledPtr->flashAmber();
 }
