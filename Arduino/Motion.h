@@ -53,7 +53,7 @@ class MotorController {
 
 class ServoController {
     public:
-        void setup(Logger *logger);
+        ServoController(Logger *logger);
         void grab();
         void release();
 
@@ -64,7 +64,7 @@ class ServoController {
 
 class LEDController {
     public:
-        void setup(Logger *logger);
+        LEDController(Logger *logger);
         void flashAmber();
         void stopAmber();
         void toggleLED(Color color, bool state);

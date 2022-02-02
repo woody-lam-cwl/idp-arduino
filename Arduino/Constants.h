@@ -32,10 +32,12 @@
 #define ULTRASONIC_UPPER_BOUND      2000
 
 #define IR_ANALOG_PIN               0
+#define IR_DIGITAL_PIN              8
 #define IR_LOWER_BOUND_DIST_CM      20
 #define IR_UPPER_BOUND_DIST_CM      150
 #define IR_LOWER_BOUND_VOLTAGE      0.5
 #define IR_UPPER_BOUND_VOLTAGE      2.5
+#define IR_ADC_THRESHOLD            550
 
 #define LINE_SENSOR_LEFT_PIN        5
 #define LINE_SENSOR_CENTER_PIN      6

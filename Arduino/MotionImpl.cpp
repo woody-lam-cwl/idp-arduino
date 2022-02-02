@@ -112,7 +112,7 @@ void MotorController::release()
     rightMotor.setMotion(Direction::Neutral);
 }
 
-void ServoController::setup(Logger *logger)
+ServoController::ServoController(Logger *logger)
 {
     this->logger = logger;
     servo.attach(SERVO_PIN);
@@ -130,7 +130,7 @@ void ServoController::release()
     servo.write(SERVO_IDLE_ANGLE);
 }
 
-void LEDController::setup(Logger *logger)
+LEDController::LEDController(Logger *logger)
 {
     this->logger = logger;
     pinMode(AMBER_LED_PIN, OUTPUT);
