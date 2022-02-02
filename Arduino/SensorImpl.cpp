@@ -1,6 +1,6 @@
 #include "Sensor.h"
 
-void LineSensor::setup(Logger *logger)
+LineSensor::LineSensor(Logger *logger)
 {
     this->logger = logger;
     pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
@@ -24,7 +24,7 @@ LineReading LineSensor::getLineReading()
     return (LineReading) reading;
 }
 
-void UltrasonicSensor::setup(Logger *logger)
+UltrasonicSensor::UltrasonicSensor(Logger *logger)
 {
     this->logger = logger;
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
@@ -47,4 +47,27 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     String message = "Ultrasonic sensor measured: " + String(distanceInMM, DEC);
     logger->log(message, LoggerLevel::Info);
     return distanceInMM;
+}
+
+InfraRedDigital::InfraRedDigital(Logger *logger)
+{
+    this->logger = logger;
+    pinMode(IR_DIGITAL_PIN, INPUT);
+    this->logger->log("Infrared digital initialised", LoggerLevel::Info);
+}
+
+bool InfraRedDigital::getIsPathClear()
+{
+    return digitalRead(IR_DIGITAL_PIN);
+}
+
+InfraRedAnalogue::InfraRedAnalogue(Logger *logger)
+{
+    this->logger = logger;
+    this->logger->log("Infrared analogue initialised", Info);
+}
+
+short InfraRedAnalogue::getInfraRedReading()
+{
+    return analogRead(IR_ANALOG_PIN);
 }
