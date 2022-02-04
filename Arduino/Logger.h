@@ -14,8 +14,7 @@ enum LoggerLevel {
 
 class Logger {
     public:
-        Logger(bool bluetoothMode);
-        void setup(String initMessage);
+        Logger(bool bluetoothMode = false);
         void log(String message, LoggerLevel level);
 
     private:

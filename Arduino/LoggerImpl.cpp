@@ -1,10 +1,7 @@
 #include "Logger.h"
 
-Logger::Logger(bool bluetoothMode) {
+Logger::Logger(bool bluetoothMode = false) {
     this->bluetoothMode = bluetoothMode && !WIRED_SERIAL_OVERRIDE;
-}
-
-void Logger::setup(String initMessage) {
     if (bluetoothMode) {
         pinMode(NINA_RESETN, OUTPUT);
         digitalWrite(NINA_RESETN, LOW);
@@ -17,7 +14,6 @@ void Logger::setup(String initMessage) {
     }
     
     log("Logger Initialised", LoggerLevel::Info);
-    log(initMessage, LoggerLevel::Info);
 }
 
 void Logger::log(String message, LoggerLevel level = LoggerLevel::Debug) {
