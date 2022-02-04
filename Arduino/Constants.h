@@ -16,9 +16,9 @@
 #define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1
-#define CRUISE_SPEED                150
-#define ADJUSTMENT_INNER_SPEED      90
-#define ADJUSTMENT_OUTER_SPEED      180
+#define CRUISE_SPEED                240
+#define ADJUSTMENT_INNER_SPEED      200
+#define ADJUSTMENT_OUTER_SPEED      255
 
 #define SERVO_PIN                   9
 #define SERVO_GRAB_ANGLE            90
