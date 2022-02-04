@@ -1,6 +1,6 @@
 #include "Sensor.h"
 
-LineSensor::LineSensor(Logger *logger)
+LineSensor::LineSensor(Logger *logger = nullptr)
 {
     this->logger = logger;
     pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
@@ -16,15 +16,17 @@ LineReading LineSensor::getLineReading()
     bool rightSensorReading = digitalRead(LINE_SENSOR_RIGHT_PIN);
     byte reading = 0;
     reading += leftSensorReading;
-    reading << 1;
+    reading *= 2;
     reading += centerSensorReading;
-    reading << 1;
+    reading *= 2;
     reading += rightSensorReading;
 
+    String message = "Line sensor reading: " + String(reading, BIN);
+    logger->log(message, LoggerLevel::Info);
     return (LineReading) reading;
 }
 
-UltrasonicSensor::UltrasonicSensor(Logger *logger)
+UltrasonicSensor::UltrasonicSensor(Logger *logger = nullptr)
 {
     this->logger = logger;
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
@@ -49,7 +51,7 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     return distanceInMM;
 }
 
-InfraRedDigital::InfraRedDigital(Logger *logger)
+InfraRedDigital::InfraRedDigital(Logger *logger = nullptr)
 {
     this->logger = logger;
     pinMode(IR_DIGITAL_PIN, INPUT);
@@ -61,7 +63,7 @@ bool InfraRedDigital::getIsPathClear()
     return digitalRead(IR_DIGITAL_PIN);
 }
 
-InfraRedAnalogue::InfraRedAnalogue(Logger *logger)
+InfraRedAnalogue::InfraRedAnalogue(Logger *logger = nullptr)
 {
     this->logger = logger;
     this->logger->log("Infrared analogue initialised", Info);
