@@ -1,6 +1,18 @@
 #include "Stages.h"
 
-LineTracing::LineTracing(Logger *logger, MotorController *motorController, LineSensor *lineSensor, LEDController *ledController)
+IStage* IStage::loop()
+{
+    logger->log("Virtual loop", LoggerLevel::Debug);
+    // if (stageTransition->shouldStageEnd()) {
+    //     stageTransition->exitProcedure();
+    // }
+    return this->nextLoopStage;
+}
+
+LineTracing::LineTracing(Logger *logger = nullptr,
+    MotorController *motorController = nullptr,
+    LineSensor *lineSensor = nullptr,
+    LEDController *ledController = nullptr)
 {
     this->logger = logger;
     this->motorController = motorController;
@@ -9,7 +21,7 @@ LineTracing::LineTracing(Logger *logger, MotorController *motorController, LineS
     logger->log("Line tracing stage instantiated", LoggerLevel::Info);
 }
 
-void LineTracing::loop()
+IStage* LineTracing::loop()
 {
     LineStatus status = getLineStatus();
     bool shouldTurnLeft = false;
@@ -20,15 +32,19 @@ void LineTracing::loop()
             shouldTurnLeft = true;
 
         case LineStatus::TooLeft:
+            logger->log("Adjusting heading", LoggerLevel::Debug);
             motorController->adjustHeading(shouldTurnLeft);
             break;
 
         case LineStatus::OnLine:
         case LineStatus::Unknown:
         default:
+            logger->log("Going straight", LoggerLevel::Debug);
             motorController->goStraight();
             break;
     }
+
+    return IStage::loop();
 }
 
 LineStatus LineTracing::getLineStatus()

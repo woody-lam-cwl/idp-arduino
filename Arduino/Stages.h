@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "Motion.h"
 #include "Sensor.h"
+#include "Transition.h"
 
 enum class LineStatus : byte {
     OnLine,
@@ -16,16 +17,23 @@ enum class LineStatus : byte {
 
 class IStage {
     public:
-        virtual void loop() = 0;
+        virtual IStage* loop();
+        ITransition *stageTransition;
+
+    protected:
+        Logger *logger;
+        IStage *nextLoopStage = this;
 };
 
 class LineTracing : public IStage {
     public:
-        LineTracing(Logger *logger, MotorController *motorController, LineSensor *lineSensor, LEDController *ledController);
-        void loop();
+        LineTracing(Logger *logger = nullptr,
+            MotorController *motorController = nullptr,
+            LineSensor *lineSensor = nullptr,
+            LEDController *ledController = nullptr);
+        IStage* loop();
 
     private:
-        Logger *logger;
         MotorController *motorController;
         LineSensor *lineSensor;
         LEDController *ledController;
@@ -34,12 +42,33 @@ class LineTracing : public IStage {
 
 class Turning : public IStage {
     public:
-        Turning(MotorController *motorController, LineSensor *lineSensor);
-        void loop();
+        Turning(Logger *logger = nullptr,
+            MotorController *motorController = nullptr);
+        IStage* loop();
     
     private:
         MotorController *motorController;
-        LineSensor *lineSensor;
 };
+
+class Grab : public IStage {
+    public:
+        Grab(Logger *logger = nullptr,
+            ServoController *servoController = nullptr);
+        IStage* loop();
+
+    private:
+        ServoController *servoController;
+};
+
+class Release : public IStage {
+    public:
+        Release(Logger *logger = nullptr,
+            ServoController *servoController = nullptr);
+        IStage* loop();
+
+    private:
+        ServoController *servoController;
+};
+
 
 #endif
