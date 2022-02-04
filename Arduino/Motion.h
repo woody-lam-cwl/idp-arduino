@@ -38,7 +38,7 @@ class Motor {
 
 class MotorController {
     public:
-        MotorController(Logger *logger);
+        MotorController(Logger *logger = nullptr);
         void goStraight();
         void adjustHeading(bool shouldTurnLeft);
         void rotate(bool shouldTurnLeft);
@@ -53,7 +53,7 @@ class MotorController {
 
 class ServoController {
     public:
-        ServoController(Logger *logger);
+        ServoController(Logger *logger = nullptr);
         void grab();
         void release();
 
@@ -64,7 +64,7 @@ class ServoController {
 
 class LEDController {
     public:
-        LEDController(Logger *logger);
+        LEDController(Logger *logger = nullptr);
         void flashAmber();
         void stopAmber();
         void toggleLED(Color color, bool state);

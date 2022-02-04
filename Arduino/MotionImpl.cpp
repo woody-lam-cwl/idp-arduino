@@ -57,7 +57,7 @@ bool Motor::isNewCommand(Direction direction, byte speed = 0U)
     return true;
 }
 
-MotorController::MotorController(Logger *logger)
+MotorController::MotorController(Logger *logger = nullptr)
 {
     this->logger = logger;
     motorShield = Adafruit_MotorShield();
@@ -112,7 +112,7 @@ void MotorController::release()
     rightMotor.setMotion(Direction::Neutral);
 }
 
-ServoController::ServoController(Logger *logger)
+ServoController::ServoController(Logger *logger = nullptr)
 {
     this->logger = logger;
     servo.attach(SERVO_PIN);
@@ -130,7 +130,7 @@ void ServoController::release()
     servo.write(SERVO_IDLE_ANGLE);
 }
 
-LEDController::LEDController(Logger *logger)
+LEDController::LEDController(Logger *logger = nullptr)
 {
     this->logger = logger;
     pinMode(AMBER_LED_PIN, OUTPUT);
