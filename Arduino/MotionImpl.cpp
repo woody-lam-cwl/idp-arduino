@@ -82,7 +82,7 @@ void MotorController::goStraight()
     rightMotor.setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
 
-void MotorController::adjustHeading(bool shouldTurnLeft)
+void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
         leftMotor.setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
@@ -94,7 +94,7 @@ void MotorController::adjustHeading(bool shouldTurnLeft)
     }
 }
 
-void MotorController::rotate(bool shouldTurnLeft)
+void MotorController::rotate(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
         leftMotor.setMotion(Direction::Reverse, CRUISE_SPEED);

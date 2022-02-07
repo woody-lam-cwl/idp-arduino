@@ -40,8 +40,8 @@ class MotorController {
     public:
         MotorController(Logger *logger = nullptr);
         void goStraight();
-        void adjustHeading(bool shouldTurnLeft);
-        void rotate(bool shouldTurnLeft);
+        void adjustHeading(bool shouldTurnLeft = true);
+        void rotate(bool shouldTurnLeft = true);
         void release();
 
     private:
