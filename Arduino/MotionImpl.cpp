@@ -79,7 +79,7 @@ void MotorController::goStraight()
 {
     // logger->log("Going straight", LoggerLevel::Debug);
     leftMotor.setMotion(Direction::Drive, CRUISE_SPEED);
-    rightMotor.setMotion(Direction::Drive, CRUISE_SPEED);
+    rightMotor.setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft)
@@ -98,11 +98,11 @@ void MotorController::rotate(bool shouldTurnLeft)
 {
     if (shouldTurnLeft) {
         leftMotor.setMotion(Direction::Reverse, CRUISE_SPEED);
-        rightMotor.setMotion(Direction::Drive, CRUISE_SPEED);
+        rightMotor.setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
     else {
         leftMotor.setMotion(Direction::Drive, CRUISE_SPEED);
-        rightMotor.setMotion(Direction::Reverse, CRUISE_SPEED);
+        rightMotor.setMotion(Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
 }
 

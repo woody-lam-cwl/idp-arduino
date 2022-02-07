@@ -9,11 +9,9 @@ class Injection {
 
         Logger *logger;
         LineTracing *lineTracing;
-
+        MotorController *motorController;
 
     private:
-
-        MotorController *motorController;
         ServoController *servoController;
         LEDController *ledController;
 

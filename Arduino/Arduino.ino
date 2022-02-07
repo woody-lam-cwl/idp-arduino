@@ -1,46 +1,36 @@
 #include "Constants.h"
-#include "Motion.h"
 #include "RuntimeTest.h"
 #include "Stages.h"
+#include "Injection.h"
 
-Logger* logger;
-IUnitTest* testPtr;
-IStage* stagePtr;
-MotorController* motorPtr;
-LEDController* ledPtr;
-LineSensor* lineSensorPtr;
+Injection *injectionPtr;
+IUnitTest *testPtr;
+IStage *stagePtr;
+// MotorController *motorPtr;
 
 void setup()
 {
     bool bluetoothMode = false;
-    Logger loggerObj(bluetoothMode);
-    logger = &loggerObj;
-    logger->setup("System Initialising");
+    Injection injection(bluetoothMode);
+    injectionPtr = &injection;
 
-    // MotorController motorController(logger);
-    // LineSensor lineSensor;
-    // lineSensor.setup(logger);
-    // LEDController ledController;
-    // ledController.setup(logger);
+    // LineSensorTest test;
+    // test.setup(injectionPtr->logger);
+    // testPtr = &test;
 
-    // motorPtr = &motorController;
-    // lineSensorPtr = &lineSensor;
-    // ledPtr = &ledController;
+    // motorPtr = injectionPtr->motorController;
 
-    // LineTracing lineTracingStage(logger, motorPtr, lineSensorPtr, ledPtr);
-    // stagePtr = &lineTracingStage;
+    stagePtr = injectionPtr->lineTracing;
 
-    UltrasonicTest test;
-    test.setup(logger);
-    testPtr = &test;
-
-    logger->log("System Initialised", Info);
+    injectionPtr->logger->log("System Initialised", Info);
 }
 
 void loop()
 {
-    // logger->log("In loop", Info);
-    // stagePtr->loop();
-    testPtr->loop();
-    // while(1);
+    // injectionPtr->logger->log("In loop", Info);
+    stagePtr->loop();
+    // testPtr->loop();
+    // bool shouldTurnLeft = true;
+    // motorPtr->rotate(shouldTurnLeft);
+    // motorPtr->goStraight();
 }

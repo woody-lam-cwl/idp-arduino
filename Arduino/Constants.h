@@ -15,7 +15,7 @@
 #define RIGHT_MOTOR_PORT            4
 #define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
-#define LEFT_TO_RIGHT_POWER_RATIO   1
+#define LEFT_TO_RIGHT_POWER_RATIO   1.055
 #define CRUISE_SPEED                240
 #define ADJUSTMENT_INNER_SPEED      200
 #define ADJUSTMENT_OUTER_SPEED      255
