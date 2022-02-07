@@ -36,13 +36,13 @@ class State {
     
     protected:
         T state;
-        unsigned long lastUpdateTime;
+        unsigned long lastUpdateTime = 0;
 };
 
-class MotorConfig {
+class MotorState {
     public:
-        byte speed = 0;
-        Direction direction = Direction::Neutral;
+        State<byte> speed;
+        State<Direction> direction;
 };
 
 class ServoAngle : public State<byte>{};
@@ -61,8 +61,8 @@ class InfraredAnalogueReading : public State<bool>{};
 
 class StateMonitor {
     public:
-        State<MotorConfig> leftMotorState;
-        State<MotorConfig> rightMotorState;
+        MotorState leftMotorState;
+        MotorState rightMotorState;
         ServoAngle servoState;
 
         LEDAmberFlashState ledAmberFlashState;

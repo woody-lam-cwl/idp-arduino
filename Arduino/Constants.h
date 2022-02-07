@@ -8,7 +8,7 @@
 
 #define AMBER_LED_PIN               2
 #define RED_LED_PIN                 3
-#define BLUE_LED_PIN                4
+#define GREEN_LED_PIN               4
 #define AMBER_LED_FREQUENCY         2
 
 #define LEFT_MOTOR_PORT             3

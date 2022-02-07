@@ -106,10 +106,10 @@ void LEDTest::setup(Logger *logger = nullptr)
 {
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
-    pinMode(BLUE_LED_PIN, OUTPUT);
+    pinMode(GREEN_LED_PIN, OUTPUT);
     digitalWrite(AMBER_LED_PIN, LOW);
     digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, LOW);
 }
 
 void LEDTest::loop()
@@ -120,9 +120,9 @@ void LEDTest::loop()
     digitalWrite(RED_LED_PIN, HIGH);
     delay(500);
     digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, HIGH);
     delay(500);
-    digitalWrite(BLUE_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, LOW);
 }
 
 void MotorTest::setup(Logger *logger = nullptr)

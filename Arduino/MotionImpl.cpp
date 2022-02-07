@@ -1,19 +1,19 @@
 #include "Motion.h"
 
-Motor::Motor()
-{
-    logger = nullptr;
-    motorAdr = nullptr;
-    motorIsNotFlipped = true;
-}
-
-Motor::Motor(Logger *logger, Adafruit_DCMotor* motorAdr, bool motorIsNotFlipped)
+Motor::Motor(
+    Logger *logger,
+    MotorState *motorState,
+    Adafruit_DCMotor* motorAdr,
+    bool motorIsNotFlipped)
 {
     this->logger = logger;
+    this->motorState = motorState;
     this->motorAdr = motorAdr;
     this->motorIsNotFlipped = motorIsNotFlipped;
-    direction = Direction::Drive;
-    speed = 1;
+
+    motorState->direction.updateState(Direction::Drive);
+    motorState->speed.updateState(1);
+
     isNewCommand(Direction::Neutral);
     logger->log("Motor initialised", LoggerLevel::Info);
 }
@@ -24,8 +24,8 @@ void Motor::setMotion(Direction direction, byte speed = 0U)
         motorAdr->setSpeed(speed);
         motorAdr->run(getMotorDirection(direction));
 
-        this->direction = direction;
-        this->speed = speed;
+        motorState->direction.updateState(direction);
+        motorState->speed.updateState(speed);
     }
 }
 
@@ -51,15 +51,19 @@ byte Motor::getMotorDirection(Direction direction)
 
 bool Motor::isNewCommand(Direction direction, byte speed = 0U)
 {
-    if (this->direction == Direction::Neutral && direction == Direction::Neutral) return false;
-    if (this->direction == direction && this->speed == speed) return false;
+    if (motorState->direction.getState() == Direction::Neutral && direction == Direction::Neutral) return false;
+    if (motorState->direction.getState() == direction && motorState->speed.getState() == speed) return false;
     
     return true;
 }
 
-MotorController::MotorController(Logger *logger = nullptr)
+MotorController::MotorController(
+    Logger *logger = nullptr,
+    StateMonitor *stateMonitor = nullptr)
 {
     this->logger = logger;
+    this->stateMonitor = stateMonitor;
+
     motorShield = Adafruit_MotorShield();
 
     if (!motorShield.begin()) {
@@ -70,8 +74,16 @@ MotorController::MotorController(Logger *logger = nullptr)
 
     Adafruit_DCMotor *leftMotorAdr = motorShield.getMotor(LEFT_MOTOR_PORT);
     Adafruit_DCMotor *rightMotorAdr = motorShield.getMotor(RIGHT_MOTOR_PORT);
-    leftMotor = Motor(logger, leftMotorAdr, LEFT_MOTOR_NO_FLIP);
-    rightMotor = Motor(logger, rightMotorAdr, RIGHT_MOTOR_NO_FLIP);
+    leftMotor = Motor(
+        logger,
+        &stateMonitor->leftMotorState,
+        leftMotorAdr,
+        LEFT_MOTOR_NO_FLIP);
+    rightMotor = Motor(
+        logger,
+        &stateMonitor->rightMotorState,
+        rightMotorAdr,
+        RIGHT_MOTOR_NO_FLIP);
     logger->log("Motor controller initialised", LoggerLevel::Info);
 }
 
@@ -112,36 +124,52 @@ void MotorController::release()
     rightMotor.setMotion(Direction::Neutral);
 }
 
-ServoController::ServoController(Logger *logger = nullptr)
+ServoController::ServoController(
+    Logger *logger = nullptr,
+    StateMonitor *stateMonitor = nullptr)
 {
     this->logger = logger;
+    this->stateMonitor = stateMonitor;
+
     servo.attach(SERVO_PIN);
     servo.write(SERVO_IDLE_ANGLE);
+    stateMonitor->servoState.updateState(SERVO_IDLE_ANGLE);
+
     logger->log("Servo controller initialised", LoggerLevel::Info);
 }
 
 void ServoController::grab()
 {
     servo.write(SERVO_GRAB_ANGLE);
+    stateMonitor->servoState.updateState(SERVO_GRAB_ANGLE);
 }
 
 void ServoController::release()
 {
     servo.write(SERVO_IDLE_ANGLE);
+    stateMonitor->servoState.updateState(SERVO_IDLE_ANGLE);
 }
 
-LEDController::LEDController(Logger *logger = nullptr)
+LEDController::LEDController(
+    Logger *logger = nullptr,
+    StateMonitor *stateMonitor = nullptr)
 {
     this->logger = logger;
+    this->stateMonitor = stateMonitor;
+
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
-    pinMode(BLUE_LED_PIN, OUTPUT);
+    pinMode(GREEN_LED_PIN, OUTPUT);
     digitalWrite(AMBER_LED_PIN, LOW);
     digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(BLUE_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, LOW);
     AmberLED = 0;
     amberFlashPeriod = 1000 / AMBER_LED_FREQUENCY / 2;
     lastAmberFlashTime = 0;
+
+    stateMonitor->ledAmberFlashState.updateState(false);
+    stateMonitor->ledRedState.updateState(false);
+    stateMonitor->ledGreenState.updateState(false);
     logger->log("LED controller initialised", LoggerLevel::Info);
 }
 
@@ -171,9 +199,9 @@ void LEDController::toggleLED(Color color, bool state)
             logger->log("Red LED state set", LoggerLevel::Info);
             break;
 
-        case Color::Blue:
-            digitalWrite(BLUE_LED_PIN, (state)? HIGH : LOW);
-            logger->log("Blue LED state set", LoggerLevel::Info);
+        case Color::Green:
+            digitalWrite(GREEN_LED_PIN, (state)? HIGH : LOW);
+            logger->log("Green LED state set", LoggerLevel::Info);
             break;
 
         default:
