@@ -1,6 +1,7 @@
 #ifndef Injection_H
 #define Injection_H
 
+#include "StateMonitor.h"
 #include "Stages.h"
 
 class Injection {
@@ -12,6 +13,7 @@ class Injection {
         MotorController *motorController;
 
     private:
+        StateMonitor *stateMonitor;
         ServoController *servoController;
         LEDController *ledController;
 

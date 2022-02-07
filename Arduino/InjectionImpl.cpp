@@ -2,6 +2,7 @@
 
 Injection::Injection(bool bluetoothMode) {
     logger = new Logger(bluetoothMode);
+    stateMonitor = new StateMonitor();
 
     motorController = new MotorController(logger);
     servoController = new ServoController(logger);
