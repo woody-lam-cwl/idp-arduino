@@ -10,7 +10,11 @@ class Injection {
 
         Logger *logger;
         LineTracing *lineTracing;
+        Turning *turning;
+
+        
         MotorController *motorController;
+        UltrasonicSensor *ultrasonicSensor;
 
     private:
         StateMonitor *stateMonitor;
@@ -18,9 +22,10 @@ class Injection {
         LEDController *ledController;
 
         LineSensor *lineSensor;
-        UltrasonicSensor *ultrasonicSensor;
         InfraRedDigital *infraRedDigital;
         InfraRedAnalogue *infraRedAnalogue;
+
+        DetectBlock *detectBlock;
 };
 
 #endif

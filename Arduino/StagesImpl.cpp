@@ -1,21 +1,34 @@
 #include "Stages.h"
 
+IStage::IStage(
+    Logger *logger = nullptr,
+    StateMonitor *stateMonitor = nullptr)
+{
+    this->logger = logger;
+    this->stateMonitor = stateMonitor;
+}
+
 IStage* IStage::loop()
 {
-    logger->log("Virtual loop", LoggerLevel::Debug);
-    // if (stageTransition->shouldStageEnd()) {
-    //     stageTransition->exitProcedure();
-    // }
+    // logger->log("Virtual loop", LoggerLevel::Debug);
+    if (stageTransition->shouldStageEnd()) {
+        stageTransition->exitProcedure();
+    }
     return this->nextLoopStage;
 }
 
-LineTracing::LineTracing(Logger *logger = nullptr,
+void IStage::setNextSequentialStage(IStage *nextSequentialStage)
+{
+    this->nextSequentialStage = nextSequentialStage;
+}
+
+LineTracing::LineTracing(
+    Logger *logger = nullptr,
+    StateMonitor *Statemonitor = nullptr,
     MotorController *motorController = nullptr,
     LineSensor *lineSensor = nullptr,
-    LEDController *ledController = nullptr)
+    LEDController *ledController = nullptr) : IStage(logger, stateMonitor)
 {
-    this->logger = logger;
-    this->motorController = motorController;
     this->lineSensor = lineSensor;
     this->ledController = ledController;
     logger->log("Line tracing stage instantiated", LoggerLevel::Info);
@@ -49,7 +62,8 @@ IStage* LineTracing::loop()
 
 LineStatus LineTracing::getLineStatus()
 {
-    LineReading reading = lineSensor->getLineReading();
+    lineSensor->updateLineReading();
+    LineReading reading = stateMonitor->lineSensorState.getState();
     LineStatus status;
 
     switch (reading) {
@@ -78,3 +92,20 @@ LineStatus LineTracing::getLineStatus()
     return status;
 }
 
+Turning::Turning(
+    Logger *logger = nullptr,
+    StateMonitor *stateMonitor = nullptr,
+    MotorController *motorController = nullptr,
+    LEDController *ledController = nullptr) : IStage(logger, stateMonitor)
+{
+    this->motorController = motorController;
+    this->ledController = ledController;
+    logger->log("Turning stage instantiated", LoggerLevel::Info);
+}
+
+IStage* Turning::loop()
+{
+    ledController->flashAmber();
+    motorController->rotate();
+    return IStage::loop();
+}

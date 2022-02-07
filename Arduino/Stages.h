@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "Constants.h"
 #include "Logger.h"
+#include "StateMonitor.h"
 #include "Motion.h"
 #include "Sensor.h"
 #include "Transition.h"
@@ -15,19 +16,29 @@ enum class LineStatus : byte {
     Unknown,
 };
 
+class ITransition;
+
 class IStage {
     public:
+        IStage(
+            Logger *logger = nullptr,
+            StateMonitor *stateMonitor = nullptr);
         virtual IStage* loop();
+        void setNextSequentialStage(IStage *nextSequentialStage);
         ITransition *stageTransition;
 
     protected:
         Logger *logger;
+        StateMonitor *stateMonitor;
         IStage *nextLoopStage = this;
+        IStage *nextSequentialStage = nullptr;
 };
 
 class LineTracing : public IStage {
     public:
-        LineTracing(Logger *logger = nullptr,
+        LineTracing(
+            Logger *logger = nullptr,
+            StateMonitor *stateMonitor = nullptr,
             MotorController *motorController = nullptr,
             LineSensor *lineSensor = nullptr,
             LEDController *ledController = nullptr);
@@ -42,33 +53,35 @@ class LineTracing : public IStage {
 
 class Turning : public IStage {
     public:
-        Turning(Logger *logger = nullptr,
-            MotorController *motorController = nullptr);
+        Turning(
+            Logger *logger = nullptr,
+            StateMonitor *stateMonitor = nullptr,
+            MotorController *motorController = nullptr,
+            LEDController *ledController = nullptr);
         IStage* loop();
     
     private:
         MotorController *motorController;
+        LEDController *ledController;
 };
 
-class Grab : public IStage {
+class Searching : public IStage {
     public:
-        Grab(Logger *logger = nullptr,
-            ServoController *servoController = nullptr);
-        IStage* loop();
-
-    private:
-        ServoController *servoController;
+        Searching(
+            Logger *logger = nullptr,
+            StateMonitor *stateMonitor = nullptr,
+            MotorController *motorController = nullptr,
+            InfraRedAnalogue *infraredAnalogue = nullptr,
+            UltrasonicSensor *ultrasonicSensor = nullptr);
 };
 
-class Release : public IStage {
+class Placing : public IStage {
     public:
-        Release(Logger *logger = nullptr,
-            ServoController *servoController = nullptr);
-        IStage* loop();
-
-    private:
-        ServoController *servoController;
+        Placing(
+            Logger *logger = nullptr,
+            StateMonitor *stateMonitor = nullptr,
+            MotorController * motorController = nullptr
+        );
 };
-
 
 #endif

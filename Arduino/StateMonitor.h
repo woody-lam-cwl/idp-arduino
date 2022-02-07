@@ -30,7 +30,12 @@ enum class BlockType : byte {
 template <typename T>
 class State {
     public:
-        void updateState(T newState);
+        void updateState(T newState)
+        {
+            this->state = newState;
+            this->lastUpdateTime = millis();
+        };
+
         T getState();
         unsigned long getLastUpdateTime();
     
@@ -38,6 +43,18 @@ class State {
         T state;
         unsigned long lastUpdateTime = 0;
 };
+
+template <typename T>
+T State<T>::getState()
+{
+    return this->state;
+}
+
+template <typename T>
+unsigned long State<T>::getLastUpdateTime()
+{
+    return this->lastUpdateTime;
+}
 
 class MotorState {
     public:
