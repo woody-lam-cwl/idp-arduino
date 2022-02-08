@@ -26,7 +26,7 @@ enum TestType : byte {
 
 class RuntimeTest {
     public:
-        RuntimeTest(bool bluetoothLogger);
+        RuntimeTest();
         void testLoop();
 
     private:

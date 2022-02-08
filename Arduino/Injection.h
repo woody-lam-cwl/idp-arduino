@@ -6,7 +6,7 @@
 
 class Injection {
     public:
-        Injection(bool bluetoothMode);
+        Injection();
 
         Logger *logger;
         LineTracing *lineTracing;

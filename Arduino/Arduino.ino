@@ -11,7 +11,7 @@ UltrasonicSensor *ultrasonicPtr;
 void setup()
 {
     bool bluetoothMode = false;
-    Injection injection(bluetoothMode);
+    Injection injection;
     injectionPtr = &injection;
 
     // UltrasonicTest test;

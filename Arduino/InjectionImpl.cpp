@@ -1,7 +1,7 @@
 #include "Injection.h"
 
-Injection::Injection(bool bluetoothMode) {
-    logger = new Logger(bluetoothMode);
+Injection::Injection() {
+    logger = new Logger();
     stateMonitor = new StateMonitor();
 
     motorController = new MotorController(logger, stateMonitor);

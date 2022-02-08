@@ -1,8 +1,8 @@
 #include "RuntimeTest.h"
 
-RuntimeTest::RuntimeTest(bool bluetoothLogger)
+RuntimeTest::RuntimeTest()
 {
-    Logger logger(bluetoothLogger);
+    Logger logger;
     this->logger = &logger;
     currentState = TestState::Idle;
     currentTest = nullptr;

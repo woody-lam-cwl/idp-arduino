@@ -58,50 +58,6 @@ void SerialReadTest::loop()
     }
 }
 
-// NINA Component to be setup using SerialToSerialBT programme before use
-void BTSerialWriteTest::setup(Logger *logger = nullptr)
-{
-    pinMode(LED_BUILTIN, OUTPUT);
-    pinMode(NINA_RESETN, OUTPUT);
-    digitalWrite(NINA_RESETN, LOW);
-    SerialNina.begin(BAUD_RATE);
-    digitalWrite(LED_BUILTIN, LOW);
-    while (!SerialNina);
-}
-
-void BTSerialWriteTest::loop()
-{
-    digitalWrite(LED_BUILTIN, HIGH);
-    SerialNina.println("Serial writing from Arduino");
-    delay(500);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
-}
-
-void BTSerialReadTest::setup(Logger *logger = nullptr)
-{
-    pinMode(LED_BUILTIN, OUTPUT);
-    pinMode(NINA_RESETN, OUTPUT);
-    digitalWrite(NINA_RESETN, LOW);
-    SerialNina.begin(BAUD_RATE);
-    digitalWrite(LED_BUILTIN, LOW);
-    while (!SerialNina);
-    digitalWrite(LED_BUILTIN, HIGH);
-    SerialNina.println("Arduino ready to receive serial message");
-}
-
-void BTSerialReadTest::loop()
-{
-    if (SerialNina.available() > 0) {
-        digitalWrite(LED_BUILTIN, LOW);
-        char data = SerialNina.read();
-        SerialNina.print("Data received: ");
-        SerialNina.println(data);
-        delay(500);
-        digitalWrite(LED_BUILTIN, HIGH);
-    }
-}
-
 void LEDTest::setup(Logger *logger = nullptr)
 {
     pinMode(AMBER_LED_PIN, OUTPUT);

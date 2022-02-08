@@ -4,7 +4,6 @@
 #include <Arduino.h>
 
 #define BAUD_RATE                   115200
-#define WIRED_SERIAL_OVERRIDE       false
 
 #define AMBER_LED_PIN               2
 #define RED_LED_PIN                 3

@@ -41,20 +41,6 @@ class SerialReadTest : public IUnitTest {
         void loop();
 };
 
-/** Test for serial writing communication with bluetooth connection */
-class BTSerialWriteTest : public IUnitTest {
-    public:
-        void setup(Logger *logger = nullptr);
-        void loop();
-};
-
-/** Test for serial reading communication with bluetooth connection */
-class BTSerialReadTest : public IUnitTest {
-    public:
-        void setup(Logger *logger = nullptr);
-        void loop();
-};
-
 /** Test for three LEDs used in motion */
 class LEDTest : public IUnitTest {
     public:
