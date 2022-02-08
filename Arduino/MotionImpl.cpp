@@ -1,10 +1,10 @@
 #include "Motion.h"
 
 Motor::Motor(
-    Logger *logger,
-    MotorState *motorState,
-    Adafruit_DCMotor* motorAdr,
-    bool motorIsNotFlipped)
+    Logger *logger = nullptr,
+    MotorState *motorState = nullptr,
+    Adafruit_DCMotor* motorAdr = nullptr,
+    bool motorIsNotFlipped = true)
 {
     this->logger = logger;
     this->motorState = motorState;
@@ -64,22 +64,22 @@ MotorController::MotorController(
     this->logger = logger;
     this->stateMonitor = stateMonitor;
 
-    motorShield = Adafruit_MotorShield();
+    motorShield = new Adafruit_MotorShield();
 
-    if (!motorShield.begin()) {
+    if (!motorShield->begin()) {
         logger->log("Could not find Motor Shield. Check wiring.", Error);
         while (1);
     }
     logger->log("Motor Shield found.", Info);
 
-    Adafruit_DCMotor *leftMotorAdr = motorShield.getMotor(LEFT_MOTOR_PORT);
-    Adafruit_DCMotor *rightMotorAdr = motorShield.getMotor(RIGHT_MOTOR_PORT);
-    leftMotor = Motor(
+    Adafruit_DCMotor *leftMotorAdr = motorShield->getMotor(LEFT_MOTOR_PORT);
+    Adafruit_DCMotor *rightMotorAdr = motorShield->getMotor(RIGHT_MOTOR_PORT);
+    leftMotor = new Motor(
         logger,
         &stateMonitor->leftMotorState,
         leftMotorAdr,
         LEFT_MOTOR_NO_FLIP);
-    rightMotor = Motor(
+    rightMotor = new Motor(
         logger,
         &stateMonitor->rightMotorState,
         rightMotorAdr,
@@ -90,38 +90,38 @@ MotorController::MotorController(
 void MotorController::goStraight()
 {
     // logger->log("Going straight", LoggerLevel::Debug);
-    leftMotor.setMotion(Direction::Drive, CRUISE_SPEED);
-    rightMotor.setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+    leftMotor->setMotion(Direction::Drive, CRUISE_SPEED);
+    rightMotor->setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
-        leftMotor.setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
-        rightMotor.setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
     }
     else {
-        leftMotor.setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
-        rightMotor.setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
     }
 }
 
 void MotorController::rotate(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
-        leftMotor.setMotion(Direction::Reverse, CRUISE_SPEED);
-        rightMotor.setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
+        rightMotor->setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
     else {
-        leftMotor.setMotion(Direction::Drive, CRUISE_SPEED);
-        rightMotor.setMotion(Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED);
+        rightMotor->setMotion(Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
 }
 
 void MotorController::release()
 {
-    leftMotor.setMotion(Direction::Neutral);
-    rightMotor.setMotion(Direction::Neutral);
+    leftMotor->setMotion(Direction::Neutral);
+    rightMotor->setMotion(Direction::Neutral);
 }
 
 ServoController::ServoController(

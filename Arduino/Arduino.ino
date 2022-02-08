@@ -14,21 +14,21 @@ void setup()
     Injection injection(bluetoothMode);
     injectionPtr = &injection;
 
-    UltrasonicTest test;
-    test.setup(injectionPtr->logger);
-    testPtr = &test;
+    // UltrasonicTest test;
+    // test.setup(injectionPtr->logger);
+    // testPtr = &test;
 
     // ultrasonicPtr = injectionPtr->ultrasonicSensor;
-    // stagePtr = injectionPtr->lineTracing;
+    stagePtr = injectionPtr->lineTracing;
 
-    // injectionPtr->logger->log("System Initialised", Info);
+    injectionPtr->logger->log("System Initialised", Info);
 }
 
 void loop()
 {
     // injectionPtr->logger->log("In loop", Info);
-    // stagePtr->loop();
-    testPtr->loop();
+    stagePtr->loop();
+    // testPtr->loop();
     // bool shouldTurnLeft = true;
     // motorPtr->rotate(shouldTurnLeft);
     // motorPtr->goStraight();

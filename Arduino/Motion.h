@@ -46,9 +46,9 @@ class MotorController {
     private:
         Logger *logger;
         StateMonitor *stateMonitor;
-        Adafruit_MotorShield motorShield;
-        Motor leftMotor;
-        Motor rightMotor;
+        Adafruit_MotorShield *motorShield;
+        Motor *leftMotor;
+        Motor *rightMotor;
 };
 
 class ServoController {
