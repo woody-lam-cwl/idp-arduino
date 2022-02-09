@@ -98,11 +98,11 @@ void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
-        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
     else {
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
-        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
     }
 }
 
