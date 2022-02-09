@@ -1,34 +1,27 @@
 #include "Stages.h"
 
-IStage::IStage(
-    Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr)
+IStage::IStage(Logger *logger = nullptr)
 {
     this->logger = logger;
-    this->stateMonitor = stateMonitor;
 }
 
 IStage* IStage::loop()
 {
-    // logger->log("Virtual loop", LoggerLevel::Debug);
+    if (stageTransition == nullptr) return this;
     if (stageTransition->shouldStageEnd()) {
         stageTransition->exitProcedure();
+        return this->nextStage;
     }
-    return this->nextLoopStage;
-}
-
-void IStage::setNextSequentialStage(IStage *nextSequentialStage)
-{
-    this->nextSequentialStage = nextSequentialStage;
+    return this;
 }
 
 LineTracing::LineTracing(
     Logger *logger = nullptr,
-    StateMonitor *Statemonitor = nullptr,
     MotorController *motorController = nullptr,
     LineSensor *lineSensor = nullptr,
-    LEDController *ledController = nullptr) : IStage(logger, stateMonitor)
+    LEDController *ledController = nullptr) : IStage(logger)
 {
+    this->motorController = motorController;
     this->lineSensor = lineSensor;
     this->ledController = ledController;
     logger->log("Line tracing stage instantiated", LoggerLevel::Info);
@@ -62,8 +55,7 @@ IStage* LineTracing::loop()
 
 LineStatus LineTracing::getLineStatus()
 {
-    lineSensor->updateLineReading();
-    LineReading reading = stateMonitor->lineSensorState.getState();
+    LineReading reading = lineSensor->getLineReading();
     LineStatus status;
 
     switch (reading) {
@@ -94,9 +86,8 @@ LineStatus LineTracing::getLineStatus()
 
 Turning::Turning(
     Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr,
     MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr) : IStage(logger, stateMonitor)
+    LEDController *ledController = nullptr) : IStage(logger)
 {
     this->motorController = motorController;
     this->ledController = ledController;

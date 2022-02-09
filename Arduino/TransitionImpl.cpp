@@ -1,49 +1,80 @@
 #include "Transition.h"
 
-ITransition::ITransition(
-    Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr,
-    IStage *nextSequentialStage = nullptr)
+ITransition::ITransition(Logger *logger = nullptr)
 {
     this->logger = logger;
-    this->stateMonitor = stateMonitor;
-    this->nextSequentialStage = nextSequentialStage;
 }
 
 DetectBlock::DetectBlock(
     Logger *logger = nullptr,
-    StateMonitor *StateMonitor = nullptr,
-    IStage *nextSequentialStage = nullptr,
     MotorController *motorController = nullptr,
     ServoController *servoController = nullptr,
     LEDController *ledController = nullptr,
-    InfraRedDigital *infraredDigital = nullptr,
-    UltrasonicSensor *ultrasonicSensor = nullptr) : ITransition(logger, stateMonitor, nextSequentialStage)
+    InfraRedAnalogue *infraredAnalogue = nullptr,
+    UltrasonicSensor *ultrasonicSensor = nullptr) : ITransition(logger)
 {
     this->motorController = motorController;
     this->servoController = servoController;
     this->ledController = ledController;
-    this->infraredDigital = infraredDigital;
+    this->infraredAnalogue = infraredAnalogue;
     this->ultrasonicSensor = ultrasonicSensor;
+    logger->log("Detect Block Transition instantiated", LoggerLevel::Info);
 }
 
 bool DetectBlock::shouldStageEnd()
 {
-    infraredDigital->updateIsPathClear();
-    return !stateMonitor->infraredDigitalState.getState();
+    short reading = infraredAnalogue->getInfraRedReading();
+    unsigned long ultrasound = ultrasonicSensor->getDistanceInMM();
+    logger->log(String(reading), LoggerLevel::Info);
+    return reading > 400;
 }
 
 void DetectBlock::exitProcedure()
 {
-    motorController->goStraight();
-    delay(500);
+    logger->log("Detect Block Transition executing", LoggerLevel::Info);
     motorController->release();
     delay(500);
     ledController->stopAmber();
     servoController->grab();
 
-    ultrasonicSensor->updateDistanceInMM();
-    unsigned long distanceInMM = stateMonitor->ultrasonicState.getState();
+    unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
     Color blockTypeColor = (distanceInMM < 100)? Color::Red : Color::Green;
     ledController->toggleLED(blockTypeColor, true);
+}
+
+FinishTurn::FinishTurn(
+    Logger *logger = nullptr,
+    MotorController *motorController = nullptr,
+    LEDController *ledController = nullptr,
+    LineSensor *lineSensor = nullptr
+) : ITransition(logger)
+{
+    this->motorController = motorController;
+    this->ledController = ledController;
+    this->lineSensor = lineSensor;
+    logger->log("Finish Turn Transition instantiated", LoggerLevel::Info);
+}
+
+bool FinishTurn::shouldStageEnd()
+{
+    logger->log("End Turn Check", LoggerLevel::Debug);
+    if (startTime == 0) {
+        startTime = millis();
+        logger->log("Set Start Time", LoggerLevel::Debug);
+    }
+    if (millis() - startTime < 1000) {
+        logger->log("Too soon", LoggerLevel::Debug);
+        return false;
+    }
+    LineReading reading = lineSensor->getLineReading();
+    return reading != L111;
+}
+
+void FinishTurn::exitProcedure()
+{
+    logger->log("Finish Turn Transition executing", LoggerLevel::Info);
+    motorController->release();
+    delay(500);
+    ledController->stopAmber();
+    startTime = 0;
 }

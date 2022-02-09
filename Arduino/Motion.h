@@ -8,11 +8,22 @@
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 #include "Constants.h"
 #include "Logger.h"
-#include "StateMonitor.h"
+
+enum class Direction : byte {
+    Drive,
+    Reverse,
+    Neutral
+};
 
 enum class Color : byte {
     Red,
     Green
+};
+
+class MotorState {
+    public:
+        byte speed;
+        Direction direction;
 };
 
 class Motor {
@@ -35,9 +46,7 @@ class Motor {
 
 class MotorController {
     public:
-        MotorController(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
+        MotorController(Logger *logger = nullptr);
         void goStraight();
         void adjustHeading(bool shouldTurnLeft = true);
         void rotate(bool shouldTurnLeft = true);
@@ -45,7 +54,6 @@ class MotorController {
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
         Adafruit_MotorShield *motorShield;
         Motor *leftMotor;
         Motor *rightMotor;
@@ -53,30 +61,24 @@ class MotorController {
 
 class ServoController {
     public:
-        ServoController(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
+        ServoController(Logger *logger = nullptr);
         void grab();
         void release();
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
         Servo servo;
 };
 
 class LEDController {
     public:
-        LEDController(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
+        LEDController(Logger *logger = nullptr);
         void flashAmber();
         void stopAmber();
         void toggleLED(Color color, bool state);
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
         unsigned int amberFlashPeriod;
         unsigned long lastAmberFlashTime;
         bool AmberLED;

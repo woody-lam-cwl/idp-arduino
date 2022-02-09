@@ -2,38 +2,47 @@
 
 Injection::Injection() {
     logger = new Logger();
-    stateMonitor = new StateMonitor();
 
-    motorController = new MotorController(logger, stateMonitor);
-    servoController = new ServoController(logger, stateMonitor);
-    ledController = new LEDController(logger, stateMonitor);
+    motorController = new MotorController(logger);
+    servoController = new ServoController(logger);
+    ledController = new LEDController(logger);
 
-    lineSensor = new LineSensor(logger, stateMonitor);
-    ultrasonicSensor = new UltrasonicSensor(logger, stateMonitor);
-    infraRedDigital = new InfraRedDigital(logger, stateMonitor);
-    infraRedAnalogue = new InfraRedAnalogue(logger, stateMonitor);
+    lineSensor = new LineSensor(logger);
+    ultrasonicSensor = new UltrasonicSensor(logger);
+    infraRedDigital = new InfraRedDigital(logger);
+    infraRedAnalogue = new InfraRedAnalogue(logger);
 
     lineTracing = new LineTracing(
         logger,
-        stateMonitor,
         motorController,
         lineSensor,
-        ledController);
+        ledController
+    );
 
     turning = new Turning(
         logger,
-        stateMonitor,
         motorController,
         ledController
     );
 
     detectBlock = new DetectBlock(
         logger,
-        stateMonitor,
-        turning,
         motorController,
         servoController,
         ledController,
-        infraRedDigital,
-        ultrasonicSensor);
+        infraRedAnalogue,
+        ultrasonicSensor
+    );
+
+    finishTurn = new FinishTurn(
+        logger,
+        motorController,
+        ledController,
+        lineSensor
+    );
+
+    // lineTracing->stageTransition = detectBlock;
+    // lineTracing->nextStage = turning;
+    // turning->stageTransition = finishTurn;
+    // turning->nextStage = lineTracing;
 }

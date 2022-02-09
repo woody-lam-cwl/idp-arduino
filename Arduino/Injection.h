@@ -1,7 +1,6 @@
 #ifndef Injection_H
 #define Injection_H
 
-#include "StateMonitor.h"
 #include "Stages.h"
 
 class Injection {
@@ -9,6 +8,7 @@ class Injection {
         Injection();
 
         Logger *logger;
+
         LineTracing *lineTracing;
         Turning *turning;
 
@@ -17,7 +17,6 @@ class Injection {
         UltrasonicSensor *ultrasonicSensor;
 
     private:
-        StateMonitor *stateMonitor;
         ServoController *servoController;
         LEDController *ledController;
 
@@ -26,6 +25,7 @@ class Injection {
         InfraRedAnalogue *infraRedAnalogue;
 
         DetectBlock *detectBlock;
+        FinishTurn *finishTurn;
 };
 
 #endif

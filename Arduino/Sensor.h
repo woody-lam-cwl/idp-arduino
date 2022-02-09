@@ -4,54 +4,53 @@
 #include <Arduino.h>
 #include "Constants.h"
 #include "Logger.h"
-#include "StateMonitor.h"
+
+enum LineReading : byte {
+    L000 = 0U,
+    L001 = 1U,
+    L010 = 2U,
+    L011 = 3U,
+    L100 = 4U,
+    L101 = 5U,
+    L110 = 6U,
+    L111 = 7U,
+};
 
 class LineSensor {
     public:
-        LineSensor(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
-        void updateLineReading();
+        LineSensor(Logger *logger = nullptr);
+        LineReading getLineReading();
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
 };
 
 class UltrasonicSensor {
     public:
-        UltrasonicSensor(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
-        void updateDistanceInMM();
+        UltrasonicSensor(Logger *logger = nullptr);
+        unsigned long getDistanceInMM();
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
 };
 
 class InfraRedDigital {
     public:
-        InfraRedDigital(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
-        void updateIsPathClear();
+        InfraRedDigital(Logger *logger = nullptr);
+        bool getIsPathClear();
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
 };
 
 class InfraRedAnalogue {
     public:
         InfraRedAnalogue(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr);
-        void updateInfraRedReading();
+            Logger *logger = nullptr);
+        short getInfraRedReading();
 
     private:
         Logger *logger;
-        StateMonitor *stateMonitor;
 };
 
 #endif

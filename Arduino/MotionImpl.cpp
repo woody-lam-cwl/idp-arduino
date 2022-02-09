@@ -11,8 +11,8 @@ Motor::Motor(
     this->motorAdr = motorAdr;
     this->motorIsNotFlipped = motorIsNotFlipped;
 
-    motorState->direction.updateState(Direction::Drive);
-    motorState->speed.updateState(1);
+    motorState->direction = Direction::Drive;
+    motorState->speed = 1;
 
     isNewCommand(Direction::Neutral);
     logger->log("Motor initialised", LoggerLevel::Info);
@@ -24,8 +24,8 @@ void Motor::setMotion(Direction direction, byte speed = 0U)
         motorAdr->setSpeed(speed);
         motorAdr->run(getMotorDirection(direction));
 
-        motorState->direction.updateState(direction);
-        motorState->speed.updateState(speed);
+        motorState->direction = direction;
+        motorState->speed = speed;
     }
 }
 
@@ -51,18 +51,15 @@ byte Motor::getMotorDirection(Direction direction)
 
 bool Motor::isNewCommand(Direction direction, byte speed = 0U)
 {
-    if (motorState->direction.getState() == Direction::Neutral && direction == Direction::Neutral) return false;
-    if (motorState->direction.getState() == direction && motorState->speed.getState() == speed) return false;
+    if (motorState->direction == Direction::Neutral && direction == Direction::Neutral) return false;
+    if (motorState->direction == direction && motorState->speed == speed) return false;
     
     return true;
 }
 
-MotorController::MotorController(
-    Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr)
+MotorController::MotorController(Logger *logger = nullptr)
 {
     this->logger = logger;
-    this->stateMonitor = stateMonitor;
 
     motorShield = new Adafruit_MotorShield();
 
@@ -76,12 +73,12 @@ MotorController::MotorController(
     Adafruit_DCMotor *rightMotorAdr = motorShield->getMotor(RIGHT_MOTOR_PORT);
     leftMotor = new Motor(
         logger,
-        &stateMonitor->leftMotorState,
+        new MotorState,
         leftMotorAdr,
         LEFT_MOTOR_NO_FLIP);
     rightMotor = new Motor(
         logger,
-        &stateMonitor->rightMotorState,
+        new MotorState,
         rightMotorAdr,
         RIGHT_MOTOR_NO_FLIP);
     logger->log("Motor controller initialised", LoggerLevel::Info);
@@ -124,16 +121,12 @@ void MotorController::release()
     rightMotor->setMotion(Direction::Neutral);
 }
 
-ServoController::ServoController(
-    Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr)
+ServoController::ServoController(Logger *logger = nullptr)
 {
     this->logger = logger;
-    this->stateMonitor = stateMonitor;
 
     servo.attach(SERVO_PIN);
     servo.write(SERVO_IDLE_ANGLE);
-    stateMonitor->servoState.updateState(SERVO_IDLE_ANGLE);
 
     logger->log("Servo controller initialised", LoggerLevel::Info);
 }
@@ -141,21 +134,16 @@ ServoController::ServoController(
 void ServoController::grab()
 {
     servo.write(SERVO_GRAB_ANGLE);
-    stateMonitor->servoState.updateState(SERVO_GRAB_ANGLE);
 }
 
 void ServoController::release()
 {
     servo.write(SERVO_IDLE_ANGLE);
-    stateMonitor->servoState.updateState(SERVO_IDLE_ANGLE);
 }
 
-LEDController::LEDController(
-    Logger *logger = nullptr,
-    StateMonitor *stateMonitor = nullptr)
+LEDController::LEDController(Logger *logger = nullptr)
 {
     this->logger = logger;
-    this->stateMonitor = stateMonitor;
 
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
@@ -167,9 +155,6 @@ LEDController::LEDController(
     amberFlashPeriod = 1000 / AMBER_LED_FREQUENCY / 2;
     lastAmberFlashTime = 0;
 
-    stateMonitor->ledAmberFlashState.updateState(false);
-    stateMonitor->ledRedState.updateState(false);
-    stateMonitor->ledGreenState.updateState(false);
     logger->log("LED controller initialised", LoggerLevel::Info);
 }
 

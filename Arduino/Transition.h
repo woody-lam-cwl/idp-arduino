@@ -8,33 +8,24 @@
 #include "Sensor.h"
 #include "Stages.h"
 
-class IStage;
-
 class ITransition {
     public:
-        ITransition(
-            Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr,
-            IStage *nextSequentialStage = nullptr);
+        ITransition(Logger *logger = nullptr);
         virtual bool shouldStageEnd() = 0;
         virtual void exitProcedure() = 0;
 
     protected:
         Logger *logger;
-        StateMonitor *stateMonitor;
-        IStage *nextSequentialStage;
 };
 
 class DetectBlock : public ITransition {
     public:
         DetectBlock(
             Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr,
-            IStage *nextSequentialStage = nullptr,
             MotorController *motorController = nullptr,
             ServoController *servoController = nullptr,
             LEDController *ledController = nullptr,
-            InfraRedDigital *infraredDigital = nullptr,
+            InfraRedAnalogue *infraredAnalogue = nullptr,
             UltrasonicSensor *ultrasonicSensor = nullptr);
         bool shouldStageEnd();
         void exitProcedure();
@@ -43,7 +34,7 @@ class DetectBlock : public ITransition {
         MotorController *motorController;
         ServoController *servoController;
         LEDController *ledController;
-        InfraRedDigital *infraredDigital;
+        InfraRedAnalogue *infraredAnalogue;
         UltrasonicSensor *ultrasonicSensor;
 };
 
@@ -51,13 +42,18 @@ class FinishTurn : public ITransition {
     public:
         FinishTurn(
             Logger *logger = nullptr,
-            StateMonitor *stateMonitor = nullptr,
-            IStage *nextSequentialStage = nullptr,
+            MotorController *motorController = nullptr,
             LEDController *ledController = nullptr,
             LineSensor *lineSensor = nullptr
         );
         bool shouldStageEnd();
         void exitProcedure();
+
+    private:
+        unsigned long startTime = 0;
+        MotorController *motorController = nullptr;
+        LEDController *ledController= nullptr;
+        LineSensor *lineSensor = nullptr;
 };
 
 class Grabbing : public ITransition {
