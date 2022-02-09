@@ -8,6 +8,13 @@
 #include "Sensor.h"
 #include "Stages.h"
 
+enum ObstructionState : byte {
+    Unobstructed,
+    UpRamp,
+    DownRamp,
+    Block
+};
+
 class ITransition {
     public:
         ITransition(Logger *logger = nullptr);
@@ -25,7 +32,7 @@ class DetectBlock : public ITransition {
             MotorController *motorController = nullptr,
             ServoController *servoController = nullptr,
             LEDController *ledController = nullptr,
-            InfraRedAnalogue *infraredAnalogue = nullptr,
+            InfraRed *infrared = nullptr,
             UltrasonicSensor *ultrasonicSensor = nullptr);
         bool shouldStageEnd();
         void exitProcedure();
@@ -34,8 +41,11 @@ class DetectBlock : public ITransition {
         MotorController *motorController;
         ServoController *servoController;
         LEDController *ledController;
-        InfraRedAnalogue *infraredAnalogue;
+        InfraRed *infrared;
         UltrasonicSensor *ultrasonicSensor;
+        ObstructionState currentState = ObstructionState::Unobstructed;
+        unsigned long lastObstructedTime = 0;
+        unsigned long triggerTime = 0;
 };
 
 class FinishTurn : public ITransition {

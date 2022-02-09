@@ -34,18 +34,9 @@ class UltrasonicSensor {
         Logger *logger;
 };
 
-class InfraRedDigital {
+class InfraRed {
     public:
-        InfraRedDigital(Logger *logger = nullptr);
-        bool getIsPathClear();
-
-    private:
-        Logger *logger;
-};
-
-class InfraRedAnalogue {
-    public:
-        InfraRedAnalogue(
+        InfraRed(
             Logger *logger = nullptr);
         short getInfraRedReading();
 

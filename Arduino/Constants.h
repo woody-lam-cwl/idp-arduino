@@ -19,9 +19,12 @@
 #define ADJUSTMENT_INNER_SPEED      200
 #define ADJUSTMENT_OUTER_SPEED      255
 
-#define SERVO_PIN                   9
-#define SERVO_GRAB_ANGLE            90
-#define SERVO_IDLE_ANGLE            0
+#define LEFT_SERVO_PIN              8
+#define RIGHT_SERVO_PIN             9
+#define LEFT_SERVO_GRAB_ANGLE       90
+#define LEFT_SERVO_IDLE_ANGLE       0
+#define RIGHT_SERVO_GRAB_ANGLE      90
+#define RIGHT_SERVO_IDLE_ANGLE      0
 
 #define ULTRASONIC_TRIGGER_PIN      12
 #define ULTRASONIC_ECHO_PIN         13
@@ -31,15 +34,12 @@
 #define ULTRASONIC_UPPER_BOUND      2000
 
 #define IR_ANALOG_PIN               0
-#define IR_DIGITAL_PIN              8
-#define IR_LOWER_BOUND_DIST_CM      20
-#define IR_UPPER_BOUND_DIST_CM      150
-#define IR_LOWER_BOUND_VOLTAGE      0.5
-#define IR_UPPER_BOUND_VOLTAGE      2.5
-#define IR_ADC_THRESHOLD            550
+#define IR_ADC_THRESHOLD            500
 
 #define LINE_SENSOR_LEFT_PIN        5
 #define LINE_SENSOR_CENTER_PIN      6
 #define LINE_SENSOR_RIGHT_PIN       7
+
+#define REBOUNCE_TIME_MS            1000
 
 #endif

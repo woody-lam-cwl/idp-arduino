@@ -23,7 +23,7 @@ LineReading LineSensor::getLineReading()
     reading += rightSensorReading;
 
     String message = "Line sensor reading: " + String(reading);
-    logger->log(message, LoggerLevel::Info);
+    logger->log(message, LoggerLevel::Debug);
     return (LineReading) reading;
 }
 
@@ -50,26 +50,16 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     return distanceInMM;
 }
 
-InfraRedDigital::InfraRedDigital(Logger *logger = nullptr)
+InfraRed::InfraRed(Logger *logger = nullptr)
 {
     this->logger = logger;
-
-    pinMode(IR_DIGITAL_PIN, INPUT);
-    this->logger->log("Infrared digital initialised", LoggerLevel::Info);
+    this->logger->log("Infrared sensor initialised", Info);
 }
 
-bool InfraRedDigital::getIsPathClear()
+short InfraRed::getInfraRedReading()
 {
-    return digitalRead(IR_DIGITAL_PIN);
-}
-
-InfraRedAnalogue::InfraRedAnalogue(Logger *logger = nullptr)
-{
-    this->logger = logger;
-    this->logger->log("Infrared analogue initialised", Info);
-}
-
-short InfraRedAnalogue::getInfraRedReading()
-{
-    return analogRead(IR_ANALOG_PIN);
+    short reading = analogRead(IR_ANALOG_PIN);
+    String message = "Infrared sensor reading: " + String(reading);
+    logger->log(message, LoggerLevel::Debug);
+    return reading;
 }

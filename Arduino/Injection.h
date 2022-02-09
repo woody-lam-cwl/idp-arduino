@@ -21,8 +21,7 @@ class Injection {
         LEDController *ledController;
 
         LineSensor *lineSensor;
-        InfraRedDigital *infraRedDigital;
-        InfraRedAnalogue *infraRedAnalogue;
+        InfraRed *infraRed;
 
         DetectBlock *detectBlock;
         FinishTurn *finishTurn;

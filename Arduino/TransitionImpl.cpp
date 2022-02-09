@@ -10,23 +10,31 @@ DetectBlock::DetectBlock(
     MotorController *motorController = nullptr,
     ServoController *servoController = nullptr,
     LEDController *ledController = nullptr,
-    InfraRedAnalogue *infraredAnalogue = nullptr,
+    InfraRed *infrared = nullptr,
     UltrasonicSensor *ultrasonicSensor = nullptr) : ITransition(logger)
 {
     this->motorController = motorController;
     this->servoController = servoController;
     this->ledController = ledController;
-    this->infraredAnalogue = infraredAnalogue;
+    this->infrared = infrared;
     this->ultrasonicSensor = ultrasonicSensor;
     logger->log("Detect Block Transition instantiated", LoggerLevel::Info);
 }
 
 bool DetectBlock::shouldStageEnd()
 {
-    short reading = infraredAnalogue->getInfraRedReading();
+    short reading = infrared->getInfraRedReading();
     unsigned long ultrasound = ultrasonicSensor->getDistanceInMM();
-    logger->log(String(reading), LoggerLevel::Info);
-    return reading > 400;
+
+    unsigned long currentTime = millis();
+    if (reading > IR_ADC_THRESHOLD & currentTime - lastObstructedTime > REBOUNCE_TIME_MS) {
+        logger->log("Obstruction State + 1", LoggerLevel::Debug);
+        currentState = (ObstructionState) ((byte) currentState + 1);
+        lastObstructedTime = currentTime;
+        if (currentState == ObstructionState::Block) triggerTime = currentTime;
+    }
+    
+    return currentState == ObstructionState::Block && currentTime - triggerTime > REBOUNCE_TIME_MS;
 }
 
 void DetectBlock::exitProcedure()
@@ -40,6 +48,7 @@ void DetectBlock::exitProcedure()
     unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
     Color blockTypeColor = (distanceInMM < 100)? Color::Red : Color::Green;
     ledController->toggleLED(blockTypeColor, true);
+    currentState = ObstructionState::Unobstructed;
 }
 
 FinishTurn::FinishTurn(
@@ -62,7 +71,7 @@ bool FinishTurn::shouldStageEnd()
         startTime = millis();
         logger->log("Set Start Time", LoggerLevel::Debug);
     }
-    if (millis() - startTime < 1000) {
+    if (millis() - startTime < REBOUNCE_TIME_MS) {
         logger->log("Too soon", LoggerLevel::Debug);
         return false;
     }

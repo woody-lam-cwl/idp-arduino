@@ -9,8 +9,7 @@ Injection::Injection() {
 
     lineSensor = new LineSensor(logger);
     ultrasonicSensor = new UltrasonicSensor(logger);
-    infraRedDigital = new InfraRedDigital(logger);
-    infraRedAnalogue = new InfraRedAnalogue(logger);
+    infraRed = new InfraRed(logger);
 
     lineTracing = new LineTracing(
         logger,
@@ -30,7 +29,7 @@ Injection::Injection() {
         motorController,
         servoController,
         ledController,
-        infraRedAnalogue,
+        infraRed,
         ultrasonicSensor
     );
 
@@ -41,8 +40,8 @@ Injection::Injection() {
         lineSensor
     );
 
-    // lineTracing->stageTransition = detectBlock;
-    // lineTracing->nextStage = turning;
-    // turning->stageTransition = finishTurn;
-    // turning->nextStage = lineTracing;
+    lineTracing->stageTransition = detectBlock;
+    lineTracing->nextStage = turning;
+    turning->stageTransition = finishTurn;
+    turning->nextStage = lineTracing;
 }
