@@ -11,13 +11,13 @@
 class ITransition {
     public:
         ITransition(
-            Logger *logger = nullptr,
-            unsigned long suppressTime = 0
+            Logger &logger,
+            unsigned long suppressTime
         );
         virtual bool shouldStageEnd() = 0;
 
     protected:
-        Logger *logger;
+        Logger &logger;
         unsigned long startTime;
         unsigned long suppressTime;
 };
@@ -25,7 +25,7 @@ class ITransition {
 class Once : public ITransition {
     public:
         Once(
-            Logger *logger = nullptr,
+            Logger &logger,
             unsigned long suppressTime = 0
         );
         bool shouldStageEnd();
@@ -34,8 +34,8 @@ class Once : public ITransition {
 class Timed : public ITransition {
     public:
         Timed(
-            Logger *logger = nullptr,
-            unsigned long suppressTime = 0
+            Logger &logger,
+            unsigned long suppressTime
         );
         bool shouldStageEnd();
 };
@@ -43,41 +43,40 @@ class Timed : public ITransition {
 class DetectObstruction : public ITransition {
     public:
         DetectObstruction(
-            Logger *logger = nullptr,
-            unsigned long suppressTime = 0,
-            InfraRed *infrared = nullptr
+            Logger &logger,
+            unsigned long suppressTime,
+            InfraRed &infrared
         );
         bool shouldStageEnd();
 
     private:
-        LEDController *ledController;
-        InfraRed *infrared;
+        InfraRed &infrared;
 };
 
 class DetectLine : public ITransition {
     public:
         DetectLine(
-            Logger *logger = nullptr,
-            unsigned long suppressTime = 0,
-            LineSensor *lineSensor = nullptr
+            Logger &logger,
+            unsigned long suppressTime,
+            LineSensor &lineSensor
         );
         bool shouldStageEnd();
 
     private:
-        LineSensor *lineSensor = nullptr;
+        LineSensor &lineSensor;
 };
 
 class DetectCross : public ITransition {
     public:
         DetectCross(
-            Logger *logger = nullptr,
-            unsigned long suppressTime = 0,
-            LineSensor *lineSensor = nullptr
+            Logger &logger,
+            unsigned long suppressTime,
+            LineSensor &lineSensor
         );
         bool shouldStageEnd();
 
     private:
-        LineSensor *lineSensor;
+        LineSensor &lineSensor;
 };
 
 #endif

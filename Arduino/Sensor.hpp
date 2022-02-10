@@ -18,30 +18,30 @@ enum LineReading : byte {
 
 class LineSensor {
     public:
-        LineSensor(Logger *logger = nullptr);
+        LineSensor(Logger &logger);
         LineReading getLineReading();
 
     private:
-        Logger *logger;
+        Logger &logger;
 };
 
 class UltrasonicSensor {
     public:
-        UltrasonicSensor(Logger *logger = nullptr);
+        UltrasonicSensor(Logger &logger);
         unsigned long getDistanceInMM();
 
     private:
-        Logger *logger;
+        Logger &logger;
 };
 
 class InfraRed {
     public:
         InfraRed(
-            Logger *logger = nullptr);
+            Logger &logger);
         short getInfraRedReading();
 
     private:
-        Logger *logger;
+        Logger &logger;
 };
 
 #endif

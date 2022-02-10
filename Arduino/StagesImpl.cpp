@@ -1,61 +1,55 @@
 #include "Stages.hpp"
 
 IStage::IStage(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr
-)
-{
-    this->logger = logger;
-    this->motorController = motorController;
-    this->ledController = ledController;
-}
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController
+) : logger {logger},
+    motorController {motorController},
+    ledController {ledController} {}
 
 IStage::~IStage()
 {
-    motorController->release();
+    motorController.goStraight();
     delay(500);
-    ledController->stopAmber();
+    ledController.stopAmber();
 }
 
 ForwardLineTracing::ForwardLineTracing(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr,
-    LineSensor *lineSensor = nullptr
-) : IStage(logger, motorController, ledController)
-{
-    this->motorController = motorController;
-    this->lineSensor = lineSensor;
-}
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController,
+    LineSensor &lineSensor
+) : IStage(logger, motorController, ledController),
+    lineSensor {lineSensor} {}
 
 void ForwardLineTracing::loop()
 {
     LineStatus status = getLineStatus();
     bool shouldTurnLeft = false;
 
-    ledController->flashAmber();
+    ledController.flashAmber();
     switch (status) {
         case LineStatus::TooRight:
             shouldTurnLeft = true;
 
         case LineStatus::TooLeft:
-            // logger->log("Adjusting heading", LoggerLevel::Debug);
-            motorController->adjustHeading(shouldTurnLeft);
+            // logger.log("Adjusting heading", LoggerLevel::Debug);
+            motorController.adjustHeading(shouldTurnLeft);
             break;
 
         case LineStatus::OnLine:
         case LineStatus::Unknown:
         default:
-            // logger->log("Going straight", LoggerLevel::Debug);
-            motorController->goStraight();
+            // logger.log("Going straight", LoggerLevel::Debug);
+            motorController.goStraight();
             break;
     }
 }
 
 LineStatus ForwardLineTracing::getLineStatus()
 {
-    LineReading reading = lineSensor->getLineReading();
+    LineReading reading = lineSensor.getLineReading();
     LineStatus status;
 
     switch (reading) {
@@ -85,80 +79,75 @@ LineStatus ForwardLineTracing::getLineStatus()
 }
 
 Turning::Turning(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr,
-    bool turnLeft = true) : IStage(logger, motorController, ledController)
-{
-    this->turnLeft= turnLeft;
-};
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController,
+    bool turnLeft = true
+) : IStage(logger, motorController, ledController),
+    turnLeft {turnLeft} {}
 
 void Turning::loop()
 {
-    ledController->flashAmber();
-    motorController->rotate(turnLeft);
+    ledController.flashAmber();
+    motorController.rotate(turnLeft);
 }
 
 GrabClassifyBlock::GrabClassifyBlock(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr,
-    ServoController *servoController = nullptr,
-    UltrasonicSensor *ultrasonicSensor = nullptr
-) : IStage(logger, motorController, ledController)
-{
-    this->servoController = servoController;
-    this->ultrasonicSensor = ultrasonicSensor;
-}
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController,
+    ServoController &servoController,
+    UltrasonicSensor &ultrasonicSensor
+) : IStage(logger, motorController, ledController),
+    servoController {servoController},
+    ultrasonicSensor {ultrasonicSensor} {}
 
 void GrabClassifyBlock::loop()
 {
-    servoController->grab();
-    unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
+    servoController.grab();
+    unsigned long distanceInMM = ultrasonicSensor.getDistanceInMM();
     Color blockTypeColor = (distanceInMM < ULTRASONIC_THRESHOLD)? Color::Red : Color::Green;
-    ledController->turnOnBlockLED(blockTypeColor);
+    ledController.turnOnBlockLED(blockTypeColor);
 }
 
 ReleaseBlock::ReleaseBlock(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr,
-    ServoController *servoController = nullptr
-) : IStage(logger, motorController, ledController)
-{
-    this->servoController = servoController;
-}
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController,
+    ServoController &servoController
+) : IStage(logger, motorController, ledController),
+    servoController {servoController} {}
 
 void ReleaseBlock::loop()
 {
     bool goForward = true;
-    ledController->flashAmber();
-    motorController->goStraight(goForward);
+    ledController.flashAmber();
+    motorController.goStraight(goForward);
     delay(300);
-    motorController->release();
+    motorController.release();
     delay(500);
-    ledController->stopAmber();
+    ledController.stopAmber();
 
-    servoController->release();
-    ledController->resetBlockLED();
+    servoController.release();
+    ledController.resetBlockLED();
 
     goForward = false;
-    ledController->flashAmber();
-    motorController->goStraight(goForward);
+    ledController.flashAmber();
+    motorController.goStraight(goForward);
     delay(300);
-    motorController->release();
+    motorController.release();
     delay(500);
-    ledController->stopAmber();
+    ledController.stopAmber();
 }
 
 ReverseMotion::ReverseMotion(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr
+    Logger &logger,
+    MotorController &motorController,
+    LEDController &ledController
 ) : IStage(logger, motorController, ledController){};
 
 void ReverseMotion::loop()
 {
-    ledController->flashAmber();
-    motorController->goStraight(false);
+    ledController.flashAmber();
+    motorController.goStraight(false);
 }

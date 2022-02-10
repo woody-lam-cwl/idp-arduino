@@ -23,7 +23,7 @@ enum class EnumTransition : byte {
 class Injection {
     public:
         Injection();
-        Logger *logger;
+        Logger logger;
         
         IStage* getNewStage(
             IStage *currentStage,
@@ -35,15 +35,16 @@ class Injection {
             EnumTransition transition,
             unsigned long suppressTime = 0
         );
+        MotorController motorController;
+
 
     private:
-        MotorController *motorController;
-        ServoController *servoController;
-        LEDController *ledController;
+        ServoController servoController;
+        LEDController ledController;
 
-        LineSensor *lineSensor;
-        UltrasonicSensor *ultrasonicSensor;
-        InfraRed *infraRed;
+        LineSensor lineSensor;
+        UltrasonicSensor ultrasonicSensor;
+        InfraRed infraRed;
 
         ForwardLineTracing* getNewForwardLineTracing();
         Turning* getNewTurning(bool turnLeft);

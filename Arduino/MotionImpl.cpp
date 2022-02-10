@@ -1,12 +1,11 @@
 #include "Motion.hpp"
 
 Motor::Motor(
-    Logger *logger = nullptr,
+    Logger &logger,
     MotorState *motorState = nullptr,
     Adafruit_DCMotor* motorAdr = nullptr,
-    bool motorIsNotFlipped = true)
+    bool motorIsNotFlipped = true) : logger {logger}
 {
-    this->logger = logger;
     this->motorState = motorState;
     this->motorAdr = motorAdr;
     this->motorIsNotFlipped = motorIsNotFlipped;
@@ -15,7 +14,7 @@ Motor::Motor(
     motorState->speed = 1;
 
     isNewCommand(Direction::Neutral);
-    logger->log("Motor initialised", LoggerLevel::Info);
+    logger.log("Motor initialised", LoggerLevel::Info);
 }
 
 void Motor::setMotion(Direction direction, byte speed = 0U)
@@ -57,17 +56,15 @@ bool Motor::isNewCommand(Direction direction, byte speed = 0U)
     return true;
 }
 
-MotorController::MotorController(Logger *logger = nullptr)
+MotorController::MotorController(Logger &logger) : logger{logger}
 {
-    this->logger = logger;
-
     motorShield = new Adafruit_MotorShield();
 
     if (!motorShield->begin()) {
-        logger->log("Could not find Motor Shield. Check wiring.", Error);
+        logger.log("Could not find Motor Shield. Check wiring.", Error);
         while (1);
     }
-    logger->log("Motor Shield found.", Info);
+    logger.log("Motor Shield found.", Info);
 
     Adafruit_DCMotor *leftMotorAdr = motorShield->getMotor(LEFT_MOTOR_PORT);
     Adafruit_DCMotor *rightMotorAdr = motorShield->getMotor(RIGHT_MOTOR_PORT);
@@ -81,7 +78,7 @@ MotorController::MotorController(Logger *logger = nullptr)
         new MotorState,
         rightMotorAdr,
         RIGHT_MOTOR_NO_FLIP);
-    logger->log("Motor controller initialised", LoggerLevel::Info);
+    logger.log("Motor controller initialised", LoggerLevel::Info);
 }
 
 void MotorController::goStraight(bool forward = true)
@@ -120,16 +117,14 @@ void MotorController::release()
     rightMotor->setMotion(Direction::Neutral);
 }
 
-ServoController::ServoController(Logger *logger = nullptr)
+ServoController::ServoController(Logger &logger) : logger {logger}
 {
-    this->logger = logger;
-
     leftServo.attach(LEFT_SERVO_PIN);
     rightServo.attach(RIGHT_SERVO_PIN);
     leftServo.write(LEFT_SERVO_IDLE_ANGLE);
     rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
 
-    logger->log("Servo controller initialised", LoggerLevel::Info);
+    logger.log("Servo controller initialised", LoggerLevel::Info);
 }
 
 void ServoController::grab()
@@ -144,10 +139,8 @@ void ServoController::release()
     rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
 }
 
-LEDController::LEDController(Logger *logger = nullptr)
+LEDController::LEDController(Logger &logger) : logger {logger}
 {
-    this->logger = logger;
-
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
     pinMode(GREEN_LED_PIN, OUTPUT);
@@ -158,7 +151,7 @@ LEDController::LEDController(Logger *logger = nullptr)
     amberFlashPeriod = 1000 / AMBER_LED_FREQUENCY / 2;
     lastAmberFlashTime = 0;
 
-    logger->log("LED controller initialised", LoggerLevel::Info);
+    logger.log("LED controller initialised", LoggerLevel::Info);
 }
 
 void LEDController::flashAmber()
@@ -175,7 +168,7 @@ void LEDController::stopAmber()
 {
     AmberLED = 0;
     digitalWrite(AMBER_LED_PIN, LOW);
-    logger->log("Amber LED stopped flashing", LoggerLevel::Info);
+    logger.log("Amber LED stopped flashing", LoggerLevel::Info);
     lastAmberFlashTime = millis();
 }
 
@@ -184,16 +177,16 @@ void LEDController::toggleLED(Color color, bool state)
     switch (color) {
         case Color::Red:
             digitalWrite(RED_LED_PIN, (state)? HIGH : LOW);
-            logger->log("Red LED state set", LoggerLevel::Info);
+            logger.log("Red LED state set", LoggerLevel::Info);
             break;
 
         case Color::Green:
             digitalWrite(GREEN_LED_PIN, (state)? HIGH : LOW);
-            logger->log("Green LED state set", LoggerLevel::Info);
+            logger.log("Green LED state set", LoggerLevel::Info);
             break;
 
         default:
-            logger->log("Invalid LED Color", LoggerLevel::Error);
+            logger.log("Invalid LED Color", LoggerLevel::Error);
             break;
     }
 }

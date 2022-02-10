@@ -1,13 +1,12 @@
 #include "Sensor.hpp"
 
-LineSensor::LineSensor(Logger *logger = nullptr)
+LineSensor::LineSensor(Logger &logger) : logger {logger}
 {
-    this->logger = logger;
 
     pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
     pinMode(LINE_SENSOR_CENTER_PIN, INPUT);
     pinMode(LINE_SENSOR_RIGHT_PIN, INPUT);
-    this->logger->log("Line sensor initialised", LoggerLevel::Info);
+    logger.log("Line sensor initialised", LoggerLevel::Info);
 }
 
 LineReading LineSensor::getLineReading()
@@ -23,18 +22,16 @@ LineReading LineSensor::getLineReading()
     reading += rightSensorReading;
 
     String message = "Line sensor reading: " + String(reading);
-    // logger->log(message, LoggerLevel::Debug);
+    // logger.log(message, LoggerLevel::Debug);
     return (LineReading) reading;
 }
 
-UltrasonicSensor::UltrasonicSensor(Logger *logger = nullptr)
+UltrasonicSensor::UltrasonicSensor(Logger &logger) : logger {logger}
 {
-    this->logger = logger;
-
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
     pinMode(ULTRASONIC_ECHO_PIN, INPUT);
-    this->logger->log("Ultrasonic sensor initialised", Info);
+    logger.log("Ultrasonic sensor initialised", Info);
 }
 
 unsigned long UltrasonicSensor::getDistanceInMM()
@@ -46,20 +43,19 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
     
     String message = "Ultrasonic sensor measured: " + String(distanceInMM);
-    logger->log(message, LoggerLevel::Info);
+    logger.log(message, LoggerLevel::Info);
     return distanceInMM;
 }
 
-InfraRed::InfraRed(Logger *logger = nullptr)
+InfraRed::InfraRed(Logger &logger) : logger {logger}
 {
-    this->logger = logger;
-    this->logger->log("Infrared sensor initialised", Info);
+    logger.log("Infrared sensor initialised", Info);
 }
 
 short InfraRed::getInfraRedReading()
 {
     short reading = analogRead(IR_ANALOG_PIN);
     String message = "Infrared sensor reading: " + String(reading);
-    // logger->log(message, LoggerLevel::Debug);
+    // logger.log(message, LoggerLevel::Debug);
     return reading;
 }

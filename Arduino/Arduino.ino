@@ -13,15 +13,14 @@ void setup()
     injectionPtr = &injection;
 
     LineSensorTest test;
-    test.setup(injectionPtr->logger);
+    test.setup(&injectionPtr->logger);
     testPtr = &test;
 
-    stagePtr = injectionPtr->lineTracing;
-    injectionPtr->logger->log("System Initialised", Info);
+    stagePtr = injectionPtr->getNewStage(nullptr, EnumStage::ForwardLineTracing);
+    injectionPtr->logger.log("System Initialised", Info);
 }
 
 void loop()
 {
-    stagePtr = stagePtr->loop();
-    // testPtr->loop();
+    stagePtr->loop();
 }

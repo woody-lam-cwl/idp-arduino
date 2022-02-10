@@ -1,17 +1,13 @@
 #include "Injection.hpp"
 
 Injection::Injection()
-{
-    logger = new Logger();
-
-    motorController = new MotorController(logger);
-    servoController = new ServoController(logger);
-    ledController = new LEDController(logger);
-
-    lineSensor = new LineSensor(logger);
-    ultrasonicSensor = new UltrasonicSensor(logger);
-    infraRed = new InfraRed(logger);
-}
+    : logger {},
+    motorController {MotorController(logger)},
+    servoController {ServoController(logger)},
+    ledController {LEDController(logger)},
+    lineSensor {LineSensor(logger)},
+    ultrasonicSensor {UltrasonicSensor(logger)},
+    infraRed {InfraRed{logger}} {}
 
 IStage* Injection::getNewStage(
     IStage *currentStage,
@@ -159,7 +155,8 @@ DetectObstruction* Injection::getNewDetectObstruction(unsigned long suppressTime
 {
     return new DetectObstruction(
         logger,
-        suppressTime
+        suppressTime,
+        infraRed
     );
 }
 
@@ -167,7 +164,8 @@ DetectLine* Injection::getNewDetectLine(unsigned long suppressTime = 0)
 {
     return new DetectLine(
         logger,
-        suppressTime
+        suppressTime,
+        lineSensor
     );
 }
 
@@ -175,6 +173,7 @@ DetectCross* Injection::getNewDetectCross(unsigned long suppressTime = 0)
 {
     return new DetectCross(
         logger,
-        suppressTime
+        suppressTime,
+        lineSensor
     );
 }
