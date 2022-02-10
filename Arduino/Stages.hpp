@@ -6,7 +6,6 @@
 #include "Logger.hpp"
 #include "Motion.hpp"
 #include "Sensor.hpp"
-#include "Transition.hpp"
 
 enum class LineStatus : byte {
     OnLine,
