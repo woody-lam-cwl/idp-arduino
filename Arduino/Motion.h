@@ -67,7 +67,8 @@ class ServoController {
 
     private:
         Logger *logger;
-        Servo servo;
+        Servo leftServo;
+        Servo rightServo;
 };
 
 class LEDController {

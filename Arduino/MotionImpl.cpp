@@ -125,20 +125,24 @@ ServoController::ServoController(Logger *logger = nullptr)
 {
     this->logger = logger;
 
-    servo.attach(SERVO_PIN);
-    servo.write(SERVO_IDLE_ANGLE);
+    leftServo.attach(LEFT_SERVO_PIN);
+    rightServo.attach(RIGHT_SERVO_PIN);
+    leftServo.write(LEFT_SERVO_IDLE_ANGLE);
+    rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
 
     logger->log("Servo controller initialised", LoggerLevel::Info);
 }
 
 void ServoController::grab()
 {
-    servo.write(SERVO_GRAB_ANGLE);
+    leftServo.write(LEFT_SERVO_GRAB_ANGLE);
+    rightServo.write(RIGHT_SERVO_GRAB_ANGLE);
 }
 
 void ServoController::release()
 {
-    servo.write(SERVO_IDLE_ANGLE);
+    leftServo.write(LEFT_SERVO_IDLE_ANGLE);
+    rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
 }
 
 LEDController::LEDController(Logger *logger = nullptr)

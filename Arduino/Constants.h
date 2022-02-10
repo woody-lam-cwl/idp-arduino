@@ -16,15 +16,15 @@
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1.055
 #define CRUISE_SPEED                240
-#define ADJUSTMENT_INNER_SPEED      200
+#define ADJUSTMENT_INNER_SPEED      210
 #define ADJUSTMENT_OUTER_SPEED      255
 
 #define LEFT_SERVO_PIN              8
 #define RIGHT_SERVO_PIN             9
-#define LEFT_SERVO_GRAB_ANGLE       90
-#define LEFT_SERVO_IDLE_ANGLE       0
-#define RIGHT_SERVO_GRAB_ANGLE      90
-#define RIGHT_SERVO_IDLE_ANGLE      0
+#define LEFT_SERVO_GRAB_ANGLE       35
+#define LEFT_SERVO_IDLE_ANGLE       60
+#define RIGHT_SERVO_GRAB_ANGLE      95
+#define RIGHT_SERVO_IDLE_ANGLE      70
 
 #define ULTRASONIC_TRIGGER_PIN      12
 #define ULTRASONIC_ECHO_PIN         13

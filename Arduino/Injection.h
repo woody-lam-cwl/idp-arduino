@@ -12,15 +12,14 @@ class Injection {
         LineTracing *lineTracing;
         Turning *turning;
 
-        
-        MotorController *motorController;
-        UltrasonicSensor *ultrasonicSensor;
+        ServoController *servoController;
 
     private:
-        ServoController *servoController;
+        MotorController *motorController;
         LEDController *ledController;
 
         LineSensor *lineSensor;
+        UltrasonicSensor *ultrasonicSensor;
         InfraRed *infraRed;
 
         DetectBlock *detectBlock;

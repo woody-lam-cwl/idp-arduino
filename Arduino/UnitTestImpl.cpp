@@ -124,7 +124,7 @@ void MotorTest::loop()
 void ServoTest::setup(Logger *logger = nullptr)
 {
     position = 0;
-    servo.attach(SERVO_PIN);
+    servo.attach(LEFT_SERVO_PIN);
     servo.write(position);
 }
 
