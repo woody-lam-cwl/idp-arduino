@@ -15,8 +15,8 @@
 #define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
 #define LEFT_TO_RIGHT_POWER_RATIO   1.055
-#define CRUISE_SPEED                240
-#define ADJUSTMENT_INNER_SPEED      210
+#define CRUISE_SPEED                245
+#define ADJUSTMENT_INNER_SPEED      220
 #define ADJUSTMENT_OUTER_SPEED      255
 
 #define LEFT_SERVO_PIN              8
@@ -32,6 +32,7 @@
 #define ULTRASONIC_MM_CONVERSION    5.88
 #define ULTRASONIC_LOWER_BOUND      10
 #define ULTRASONIC_UPPER_BOUND      2000
+#define ULTRASONIC_THRESHOLD        70
 
 #define IR_ANALOG_PIN               0
 #define IR_ADC_THRESHOLD            500

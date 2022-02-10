@@ -46,7 +46,7 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
     
     String message = "Ultrasonic sensor measured: " + String(distanceInMM);
-    // logger->log(message, LoggerLevel::Info);
+    logger->log(message, LoggerLevel::Info);
     return distanceInMM;
 }
 

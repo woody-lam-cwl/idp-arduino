@@ -24,7 +24,6 @@ DetectBlock::DetectBlock(
 bool DetectBlock::shouldStageEnd()
 {
     short reading = infrared->getInfraRedReading();
-    unsigned long ultrasound = ultrasonicSensor->getDistanceInMM();
 
     unsigned long currentTime = millis();
     if (reading > IR_ADC_THRESHOLD & currentTime - lastObstructedTime > REBOUNCE_TIME_MS) {
@@ -48,13 +47,14 @@ void DetectBlock::exitProcedure()
     servoController->grab();
 
     unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
-    Color blockTypeColor = (distanceInMM < 100)? Color::Red : Color::Green;
+    Color blockTypeColor = (distanceInMM < ULTRASONIC_THRESHOLD)? Color::Red : Color::Green;
     ledController->toggleLED(blockTypeColor, true);
 
+    ledController->flashAmber();
     motorController->goStraight();
-    delay(2000);
+    delay(1500);
     motorController->goStraight(false);
-    delay(1000);
+    delay(500);
     motorController->release();
     delay(500);
     ledController->stopAmber();
