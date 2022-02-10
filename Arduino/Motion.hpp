@@ -76,10 +76,12 @@ class LEDController {
         LEDController(Logger *logger = nullptr);
         void flashAmber();
         void stopAmber();
-        void toggleLED(Color color, bool state);
+        void turnOnBlockLED(Color color);
+        void resetBlockLED();
 
     private:
         Logger *logger;
+        void toggleLED(Color color, bool state);
         unsigned int amberFlashPeriod;
         unsigned long lastAmberFlashTime;
         bool AmberLED;

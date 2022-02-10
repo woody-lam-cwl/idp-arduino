@@ -19,28 +19,34 @@ class ITransition;
 
 class IStage {
     public:
-        IStage(Logger *logger = nullptr);
-        virtual IStage* loop();
+        IStage(
+            Logger *logger = nullptr,
+            MotorController *motorController = nullptr,
+            LEDController *ledController = nullptr
+        );
+        virtual void loop() = 0;
         IStage *nextStage = nullptr;
         ITransition *stageTransition = nullptr;
+        ~IStage();
 
     protected:
         Logger *logger;
+        MotorController *motorController;
+        LEDController *ledController;
 };
 
-class LineTracing : public IStage {
+class ForwardLineTracing : public IStage {
     public:
-        LineTracing(
+        ForwardLineTracing(
             Logger *logger = nullptr,
             MotorController *motorController = nullptr,
-            LineSensor *lineSensor = nullptr,
-            LEDController *ledController = nullptr);
-        IStage* loop();
+            LEDController *ledController = nullptr,
+            LineSensor *lineSensor = nullptr
+        );
+        void loop();
 
     private:
-        MotorController *motorController;
         LineSensor *lineSensor;
-        LEDController *ledController;
         LineStatus getLineStatus();
 };
 
@@ -49,29 +55,53 @@ class Turning : public IStage {
         Turning(
             Logger *logger = nullptr,
             MotorController *motorController = nullptr,
-            LEDController *ledController = nullptr);
-        IStage* loop();
-    
+            LEDController *ledController = nullptr,
+            bool turnLeft = true
+        );
+        void loop();
+
     private:
-        MotorController *motorController;
-        LEDController *ledController;
+        bool turnLeft;
 };
 
-class Searching : public IStage {
+class GrabClassifyBlock : public IStage {
     public:
-        Searching(
+        GrabClassifyBlock(
             Logger *logger = nullptr,
             MotorController *motorController = nullptr,
-            InfraRed *infrared = nullptr,
-            UltrasonicSensor *ultrasonicSensor = nullptr);
+            LEDController *ledController = nullptr,
+            ServoController *servoController = nullptr,
+            UltrasonicSensor *ultrasonicSensor = nullptr
+        );
+        void loop();
+
+    private:
+        ServoController *servoController;
+        UltrasonicSensor *ultrasonicSensor;
 };
 
-class Placing : public IStage {
+class ReleaseBlock : public IStage {
     public:
-        Placing(
+        ReleaseBlock(
             Logger *logger = nullptr,
-            MotorController * motorController = nullptr
+            MotorController *motorController = nullptr,
+            LEDController *ledController = nullptr,
+            ServoController *servoController = nullptr
         );
+        void loop();
+    
+    private:
+        ServoController *servoController;
+};
+
+class ReverseMotion : public IStage {
+    public:
+        ReverseMotion(
+            Logger *logger = nullptr,
+            MotorController *motorController = nullptr,
+            LEDController *LEDController = nullptr
+        );
+        void loop();
 };
 
 #endif

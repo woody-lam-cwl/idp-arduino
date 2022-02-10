@@ -86,7 +86,6 @@ MotorController::MotorController(Logger *logger = nullptr)
 
 void MotorController::goStraight(bool forward = true)
 {
-    // logger->log("Going straight", LoggerLevel::Debug);
     leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
     rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
@@ -197,4 +196,15 @@ void LEDController::toggleLED(Color color, bool state)
             logger->log("Invalid LED Color", LoggerLevel::Error);
             break;
     }
+}
+
+void LEDController::turnOnBlockLED(Color color)
+{
+    toggleLED(color, HIGH);
+}
+
+void LEDController::resetBlockLED()
+{
+    toggleLED(Color::Red, LOW);
+    toggleLED(Color::Green, LOW);
 }
