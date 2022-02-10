@@ -6,24 +6,24 @@
 class Injection {
     public:
         Injection();
-
         Logger *logger;
 
         LineTracing *lineTracing;
         Turning *turning;
 
-        ServoController *servoController;
+        DetectBlock *detectBlock;
+        DetectCross *detectCross;
+        FinishTurn *finishTurn;
+        TimedTurn *timedTurn;
 
     private:
         MotorController *motorController;
+        ServoController *servoController;
         LEDController *ledController;
 
         LineSensor *lineSensor;
         UltrasonicSensor *ultrasonicSensor;
         InfraRed *infraRed;
-
-        DetectBlock *detectBlock;
-        FinishTurn *finishTurn;
 };
 
 #endif
