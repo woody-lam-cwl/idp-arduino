@@ -84,22 +84,22 @@ MotorController::MotorController(Logger *logger = nullptr)
     logger->log("Motor controller initialised", LoggerLevel::Info);
 }
 
-void MotorController::goStraight()
+void MotorController::goStraight(bool forward = true)
 {
     // logger->log("Going straight", LoggerLevel::Debug);
-    leftMotor->setMotion(Direction::Drive, CRUISE_SPEED);
-    rightMotor->setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+    leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
+    rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
-        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
     }
     else {
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
-        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
     }
 }
 
