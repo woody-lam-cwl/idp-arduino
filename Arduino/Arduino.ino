@@ -9,13 +9,12 @@ IStage *stagePtr;
 
 void setup()
 {
-    bool bluetoothMode = false;
     Injection injection;
     injectionPtr = &injection;
 
-    // InfraRedTest test;
-    // test.setup(injectionPtr->logger);
-    // testPtr = &test;
+    LineSensorTest test;
+    test.setup(injectionPtr->logger);
+    testPtr = &test;
 
     stagePtr = injectionPtr->lineTracing;
     injectionPtr->logger->log("System Initialised", Info);
