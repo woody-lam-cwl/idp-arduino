@@ -23,7 +23,7 @@ LineReading LineSensor::getLineReading()
     reading += rightSensorReading;
 
     String message = "Line sensor reading: " + String(reading);
-    logger->log(message, LoggerLevel::Debug);
+    // logger->log(message, LoggerLevel::Debug);
     return (LineReading) reading;
 }
 
@@ -45,8 +45,8 @@ unsigned long UltrasonicSensor::getDistanceInMM()
     unsigned long pulseDuration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_TIMEOUT_US);
     unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
     
-    String message = "Ultrasonic sensor measured: " + String(distanceInMM, DEC);
-    logger->log(message, LoggerLevel::Info);
+    String message = "Ultrasonic sensor measured: " + String(distanceInMM);
+    // logger->log(message, LoggerLevel::Info);
     return distanceInMM;
 }
 
@@ -60,6 +60,6 @@ short InfraRed::getInfraRedReading()
 {
     short reading = analogRead(IR_ANALOG_PIN);
     String message = "Infrared sensor reading: " + String(reading);
-    logger->log(message, LoggerLevel::Debug);
+    // logger->log(message, LoggerLevel::Debug);
     return reading;
 }
