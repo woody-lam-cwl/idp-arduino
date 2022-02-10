@@ -62,7 +62,7 @@ class Searching : public IStage {
         Searching(
             Logger *logger = nullptr,
             MotorController *motorController = nullptr,
-            InfraRedAnalogue *infraredAnalogue = nullptr,
+            InfraRed *infrared = nullptr,
             UltrasonicSensor *ultrasonicSensor = nullptr);
 };
 

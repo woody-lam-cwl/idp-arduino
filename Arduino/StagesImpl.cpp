@@ -38,14 +38,14 @@ IStage* LineTracing::loop()
             shouldTurnLeft = true;
 
         case LineStatus::TooLeft:
-            logger->log("Adjusting heading", LoggerLevel::Debug);
+            // logger->log("Adjusting heading", LoggerLevel::Debug);
             motorController->adjustHeading(shouldTurnLeft);
             break;
 
         case LineStatus::OnLine:
         case LineStatus::Unknown:
         default:
-            logger->log("Going straight", LoggerLevel::Debug);
+            // logger->log("Going straight", LoggerLevel::Debug);
             motorController->goStraight();
             break;
     }
