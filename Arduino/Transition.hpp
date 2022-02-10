@@ -8,13 +8,6 @@
 #include "Sensor.hpp"
 #include "Stages.hpp"
 
-enum ObstructionState : byte {
-    Unobstructed,
-    UpRamp,
-    DownRamp,
-    Block
-};
-
 class ITransition {
     public:
         ITransition(
@@ -47,9 +40,9 @@ class Timed : public ITransition {
         bool shouldStageEnd();
 };
 
-class DetectBlock : public ITransition {
+class DetectObstruction : public ITransition {
     public:
-        DetectBlock(
+        DetectObstruction(
             Logger *logger = nullptr,
             unsigned long suppressTime = 0,
             InfraRed *infrared = nullptr
@@ -59,8 +52,6 @@ class DetectBlock : public ITransition {
     private:
         LEDController *ledController;
         InfraRed *infrared;
-        ObstructionState currentObstruction;
-        unsigned long lastObstructedTime;
 };
 
 class DetectLine : public ITransition {

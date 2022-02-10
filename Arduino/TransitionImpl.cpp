@@ -34,29 +34,25 @@ bool Timed::shouldStageEnd()
     return true;
 }
 
-DetectBlock::DetectBlock(
+DetectObstruction::DetectObstruction(
     Logger *logger = nullptr,
     unsigned long suppressTime = 0,
     InfraRed *infrared = nullptr
 ) : ITransition(logger, suppressTime)
 {
     this->infrared = infrared;
-    lastObstructedTime = startTime;
-    currentObstruction = ObstructionState::Unobstructed;
 };
 
-bool DetectBlock::shouldStageEnd()
+bool DetectObstruction::shouldStageEnd()
 {
     short reading = infrared->getInfraRedReading();
     unsigned long currentTime = millis();
-    if (reading > IR_ADC_THRESHOLD & currentTime - lastObstructedTime > suppressTime) {
-        logger->log("Obstruction State + 1", LoggerLevel::Debug);
-        currentObstruction = (ObstructionState) ((byte) currentObstruction + 1);
-        lastObstructedTime = currentTime;
+
+    if (reading > IR_ADC_THRESHOLD & currentTime - startTime > suppressTime) {
+        logger->log("Obstruction detected. Now ending stage.", LoggerLevel::Info);
+        return true;
     }
-    if (currentObstruction != ObstructionState::Block) return false;
-    logger->log("Block detected. Now ending stage.", LoggerLevel::Info);
-    return true;
+    return false;
 }
 
 DetectLine::DetectLine(
@@ -72,11 +68,10 @@ bool DetectLine::shouldStageEnd()
 {
     LineReading reading = lineSensor->getLineReading();
     unsigned long currentTime = millis();
-    if (currentTime - startTime > suppressTime 
-        && reading != LineReading::L111) {
-            logger->log("Line detected. Now ending stage.", LoggerLevel::Info);
-            return true;
-        }
+    if (reading != LineReading::L111 && currentTime - startTime > suppressTime) {
+        logger->log("Line detected. Now ending stage.", LoggerLevel::Info);
+        return true;
+    }
     return false;
 }
 
@@ -93,10 +88,9 @@ bool DetectCross::shouldStageEnd()
 {
     LineReading reading = lineSensor->getLineReading();
     unsigned long currentTime = millis();
-    if (currentTime - startTime > suppressTime 
-        && reading == LineReading::L000) {
-            logger->log("Line detected. Now ending stage.", LoggerLevel::Info);
-            return true;
-        }
+    if (reading == LineReading::L000 && currentTime - startTime > suppressTime) {
+        logger->log("Cross detected. Now ending stage.", LoggerLevel::Info);
+        return true;
+    }
     return false;
 }
