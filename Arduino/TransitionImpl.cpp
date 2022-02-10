@@ -31,23 +31,33 @@ bool DetectBlock::shouldStageEnd()
         logger->log("Obstruction State + 1", LoggerLevel::Debug);
         currentState = (ObstructionState) ((byte) currentState + 1);
         lastObstructedTime = currentTime;
-        if (currentState == ObstructionState::Block) triggerTime = currentTime;
     }
     
-    return currentState == ObstructionState::Block && currentTime - triggerTime > REBOUNCE_TIME_MS;
+    return currentState == ObstructionState::Block;
 }
 
 void DetectBlock::exitProcedure()
 {
     logger->log("Detect Block Transition executing", LoggerLevel::Info);
+    motorController->goStraight();
+    delay(2000);
     motorController->release();
     delay(500);
     ledController->stopAmber();
+
     servoController->grab();
 
     unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
     Color blockTypeColor = (distanceInMM < 100)? Color::Red : Color::Green;
     ledController->toggleLED(blockTypeColor, true);
+
+    motorController->goStraight();
+    delay(2000);
+    motorController->goStraight(false);
+    delay(1000);
+    motorController->release();
+    delay(500);
+    ledController->stopAmber();
     currentState = ObstructionState::Unobstructed;
 }
 
