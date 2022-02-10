@@ -2,11 +2,11 @@
 #define Stages_H
 
 #include <Arduino.h>
-#include "Constants.h"
-#include "Logger.h"
-#include "Motion.h"
-#include "Sensor.h"
-#include "Transition.h"
+#include "Constants.hpp"
+#include "Logger.hpp"
+#include "Motion.hpp"
+#include "Sensor.hpp"
+#include "Transition.hpp"
 
 enum class LineStatus : byte {
     OnLine,

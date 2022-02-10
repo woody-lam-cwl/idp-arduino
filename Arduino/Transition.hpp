@@ -2,11 +2,11 @@
 #define Transition_H
 
 #include <Arduino.h>
-#include "Constants.h"
-#include "Logger.h"
-#include "Motion.h"
-#include "Sensor.h"
-#include "Stages.h"
+#include "Constants.hpp"
+#include "Logger.hpp"
+#include "Motion.hpp"
+#include "Sensor.hpp"
+#include "Stages.hpp"
 
 enum ObstructionState : byte {
     Unobstructed,

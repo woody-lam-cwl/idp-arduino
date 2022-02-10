@@ -1,4 +1,4 @@
-#include "UnitTest.h"
+#include "UnitTest.hpp"
 
 void ArduinoTest::setup(Logger *logger = nullptr)
 {

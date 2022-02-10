@@ -1,7 +1,7 @@
 #ifndef Injection_H
 #define Injection_H
 
-#include "Stages.h"
+#include "Stages.hpp"
 
 class Injection {
     public:

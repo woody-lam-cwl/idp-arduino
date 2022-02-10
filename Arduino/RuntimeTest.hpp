@@ -2,9 +2,9 @@
 #define RuntimeTest_H
 
 #include <Arduino.h>
-#include "Constants.h"
-#include "Logger.h"
-#include "UnitTest.h"
+#include "Constants.hpp"
+#include "Logger.hpp"
+#include "UnitTest.hpp"
 
 enum TestState : byte {
     Idle,

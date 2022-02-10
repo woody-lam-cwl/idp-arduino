@@ -1,4 +1,4 @@
-#include "Stages.h"
+#include "Stages.hpp"
 
 IStage::IStage(Logger *logger = nullptr)
 {

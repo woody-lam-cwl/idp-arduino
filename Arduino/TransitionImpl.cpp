@@ -1,4 +1,4 @@
-#include "Transition.h"
+#include "Transition.hpp"
 
 ITransition::ITransition(Logger *logger = nullptr)
 {

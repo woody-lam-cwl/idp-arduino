@@ -2,8 +2,8 @@
 #define Sensor_H
 
 #include <Arduino.h>
-#include "Constants.h"
-#include "Logger.h"
+#include "Constants.hpp"
+#include "Logger.hpp"
 
 enum LineReading : byte {
     L000 = 0U,

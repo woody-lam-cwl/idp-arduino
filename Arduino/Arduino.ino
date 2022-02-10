@@ -1,7 +1,7 @@
-#include "Constants.h"
-#include "RuntimeTest.h"
-#include "Stages.h"
-#include "Injection.h"
+#include "Constants.hpp"
+#include "RuntimeTest.hpp"
+#include "Stages.hpp"
+#include "Injection.hpp"
 
 Injection *injectionPtr;
 IUnitTest *testPtr;

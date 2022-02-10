@@ -6,8 +6,8 @@
 #include <Adafruit_MotorShield.h>
 #include <Wire.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
-#include "Constants.h"
-#include "Logger.h"
+#include "Constants.hpp"
+#include "Logger.hpp"
 
 enum class Direction : byte {
     Drive,

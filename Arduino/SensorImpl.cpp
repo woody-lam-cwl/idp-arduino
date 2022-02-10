@@ -1,4 +1,4 @@
-#include "Sensor.h"
+#include "Sensor.hpp"
 
 LineSensor::LineSensor(Logger *logger = nullptr)
 {

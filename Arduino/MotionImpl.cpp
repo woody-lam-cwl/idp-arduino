@@ -1,4 +1,4 @@
-#include "Motion.h"
+#include "Motion.hpp"
 
 Motor::Motor(
     Logger *logger = nullptr,

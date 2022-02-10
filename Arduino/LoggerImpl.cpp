@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "Logger.hpp"
 
 Logger::Logger() {
     Serial.begin(BAUD_RATE);
