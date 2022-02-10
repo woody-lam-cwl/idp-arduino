@@ -45,7 +45,6 @@ class DetectBlock : public ITransition {
         UltrasonicSensor *ultrasonicSensor;
         ObstructionState currentState = ObstructionState::Unobstructed;
         unsigned long lastObstructedTime = 0;
-        unsigned long triggerTime = 0;
 };
 
 class FinishTurn : public ITransition {

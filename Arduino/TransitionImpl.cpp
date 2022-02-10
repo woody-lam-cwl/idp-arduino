@@ -81,7 +81,7 @@ bool FinishTurn::shouldStageEnd()
         startTime = millis();
         logger->log("Set Start Time", LoggerLevel::Debug);
     }
-    if (millis() - startTime < REBOUNCE_TIME_MS) {
+    if (millis() - startTime < TURN_SUPPRESS_LINE_TIME_MS) {
         logger->log("Too soon", LoggerLevel::Debug);
         return false;
     }
