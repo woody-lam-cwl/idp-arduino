@@ -1,174 +1,166 @@
 #include "Transition.hpp"
 
-ITransition::ITransition(Logger *logger = nullptr)
+ITransition::ITransition(
+    Logger *logger = nullptr,
+    unsigned long suppressTime = 0
+)
 {
     this->logger = logger;
+    this->suppressTime = suppressTime;
+    this->startTime = millis();
+}
+
+Once::Once(
+    Logger *logger = nullptr,
+    unsigned long suppressTime = 0
+) : ITransition(logger, suppressTime){};
+
+bool Once::shouldStageEnd()
+{
+    logger->log("Stage executed once. Now ending.", LoggerLevel::Info);
+    return true;
+}
+
+Timed::Timed(
+    Logger *logger = nullptr,
+    unsigned long suppresTime = 0
+) : ITransition(logger, suppressTime){};
+
+bool Timed::shouldStageEnd()
+{
+    unsigned long currentTime = millis();
+    if (currentTime - startTime < suppressTime) return false;
+    logger->log("Stage time limit reached. Now ending.", LoggerLevel::Info);
+    return true;
 }
 
 DetectBlock::DetectBlock(
     Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    ServoController *servoController = nullptr,
-    LEDController *ledController = nullptr,
-    InfraRed *infrared = nullptr,
-    UltrasonicSensor *ultrasonicSensor = nullptr) : ITransition(logger)
+    unsigned long suppressTime = 0,
+    InfraRed *infrared = nullptr
+) : ITransition(logger, suppressTime)
 {
-    this->motorController = motorController;
-    this->servoController = servoController;
-    this->ledController = ledController;
     this->infrared = infrared;
-    this->ultrasonicSensor = ultrasonicSensor;
-    logger->log("Detect Block Transition instantiated", LoggerLevel::Info);
-}
+    lastObstructedTime = startTime;
+    currentObstruction = ObstructionState::Unobstructed;
+};
 
 bool DetectBlock::shouldStageEnd()
 {
     short reading = infrared->getInfraRedReading();
-
     unsigned long currentTime = millis();
-    if (reading > IR_ADC_THRESHOLD & currentTime - lastObstructedTime > REBOUNCE_TIME_MS) {
+    if (reading > IR_ADC_THRESHOLD & currentTime - lastObstructedTime > suppressTime) {
         logger->log("Obstruction State + 1", LoggerLevel::Debug);
-        currentState = (ObstructionState) ((byte) currentState + 1);
+        currentObstruction = (ObstructionState) ((byte) currentObstruction + 1);
         lastObstructedTime = currentTime;
     }
-    
-    return currentState == ObstructionState::Block;
+    if (currentObstruction != ObstructionState::Block) return false;
+    logger->log("Block detected. Now ending stage.", LoggerLevel::Info);
+    return true;
 }
 
-void DetectBlock::exitProcedure()
-{
-    logger->log("Detect Block Transition executing", LoggerLevel::Info);
-    motorController->goStraight();
-    delay(2000);
-    motorController->release();
-    delay(500);
-    ledController->stopAmber();
-
-    servoController->grab();
-
-    unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
-    Color blockTypeColor = (distanceInMM < ULTRASONIC_THRESHOLD)? Color::Red : Color::Green;
-    ledController->toggleLED(blockTypeColor, true);
-
-    ledController->flashAmber();
-    motorController->goStraight();
-    delay(1500);
-    motorController->goStraight(false);
-    delay(500);
-    motorController->release();
-    delay(500);
-    ledController->stopAmber();
-    currentState = ObstructionState::Unobstructed;
-}
-
-FinishTurn::FinishTurn(
+DetectLine::DetectLine(
     Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    LEDController *ledController = nullptr,
+    unsigned long suppressTime = 0,
     LineSensor *lineSensor = nullptr
-) : ITransition(logger)
+) : ITransition(logger, suppressTime)
 {
-    this->motorController = motorController;
-    this->ledController = ledController;
     this->lineSensor = lineSensor;
-    logger->log("Finish Turn Transition instantiated", LoggerLevel::Info);
 }
 
-bool FinishTurn::shouldStageEnd()
+bool DetectLine::shouldStageEnd()
 {
-    logger->log("End Turn Check", LoggerLevel::Debug);
-    if (startTime == 0) {
-        startTime = millis();
-        logger->log("Set Start Time", LoggerLevel::Debug);
-    }
-    if (millis() - startTime < TURN_SUPPRESS_LINE_TIME_MS) {
-        logger->log("Too soon", LoggerLevel::Debug);
-        return false;
-    }
     LineReading reading = lineSensor->getLineReading();
-    return reading != L111;
-}
-
-void FinishTurn::exitProcedure()
-{
-    logger->log("Finish Turn Transition executing", LoggerLevel::Info);
-    motorController->release();
-    delay(500);
-    ledController->stopAmber();
-    startTime = 0;
+    unsigned long currentTime = millis();
+    if (currentTime - startTime > suppressTime 
+        && reading != LineReading::L111) {
+            logger->log("Line detected. Now ending stage.", LoggerLevel::Info);
+            return true;
+        }
+    return false;
 }
 
 DetectCross::DetectCross(
     Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    ServoController *servoController = nullptr,
-    LEDController *ledController = nullptr,
+    unsigned long suppressTime = 0,
     LineSensor *lineSensor = nullptr
-) : ITransition(logger)
+) : ITransition(logger, suppressTime)
 {
-    this->motorController = motorController;
-    this->servoController = servoController;
-    this->ledController = ledController;
     this->lineSensor = lineSensor;
 }
 
 bool DetectCross::shouldStageEnd()
 {
-    if (startTime == 0) {
-        startTime = millis();
-        logger->log("Set Start Time", LoggerLevel::Debug);
-    }
-    if (millis() - startTime < CROSS_DETECT_SUPPRESS_MS) {
-        logger->log("Too soon", LoggerLevel::Debug);
-        return false;
-    }
     LineReading reading = lineSensor->getLineReading();
-    return reading == LineReading::L000;
-}
-
-void DetectCross::exitProcedure()
-{
-    motorController->goStraight();
-    delay(1500);
-    motorController->release();
-    delay(500);
-    ledController->stopAmber();
-    ledController->toggleLED(Color::Red, 0);
-    ledController->toggleLED(Color::Green, 0);
-    startTime = 0;
-}
-
-TimedTurn::TimedTurn(
-    Logger *logger = nullptr,
-    MotorController *motorController = nullptr,
-    ServoController *servoController = nullptr,
-    LEDController *ledController = nullptr
-) : ITransition(logger)
-{
-    this->motorController = motorController;
-    this->servoController = servoController;
-    this->ledController = ledController;
-}
-
-bool TimedTurn::shouldStageEnd()
-{
     unsigned long currentTime = millis();
-    if (startTime == 0) startTime = currentTime;
-    return currentTime - startTime > TURN_90DEG_TIME_MS;
+    if (currentTime - startTime > suppressTime 
+        && reading == LineReading::L000) {
+            logger->log("Line detected. Now ending stage.", LoggerLevel::Info);
+            return true;
+        }
+    return false;
 }
 
-void TimedTurn::exitProcedure()
-{
-    bool forward = true;
-    motorController->goStraight(forward);
-    delay(500);
-    motorController->release();
-    delay(500);
-    servoController->release();
-    forward = false;
-    motorController->goStraight(forward);
-    delay(500);
-    motorController->release();
-    delay(500);
-    startTime = 0;
-}
+
+// void DetectBlock::exitProcedure()
+// {
+//     logger->log("Detect Block Transition executing", LoggerLevel::Info);
+//     motorController->goStraight();
+//     delay(2000);
+//     motorController->release();
+//     delay(500);
+//     ledController->stopAmber();
+
+//     servoController->grab();
+
+//     unsigned long distanceInMM = ultrasonicSensor->getDistanceInMM();
+//     Color blockTypeColor = (distanceInMM < ULTRASONIC_THRESHOLD)? Color::Red : Color::Green;
+//     ledController->toggleLED(blockTypeColor, true);
+
+//     ledController->flashAmber();
+//     motorController->goStraight();
+//     delay(1500);
+//     motorController->goStraight(false);
+//     delay(500);
+//     motorController->release();
+//     delay(500);
+//     ledController->stopAmber();
+//     currentState = ObstructionState::Unobstructed;
+// }
+
+// void FinishTurn::exitProcedure()
+// {
+//     logger->log("Finish Turn Transition executing", LoggerLevel::Info);
+//     motorController->release();
+//     delay(500);
+//     ledController->stopAmber();
+//     startTime = 0;
+// }
+
+// void DetectCross::exitProcedure()
+// {
+//     motorController->goStraight();
+//     delay(1500);
+//     motorController->release();
+//     delay(500);
+//     ledController->stopAmber();
+//     ledController->toggleLED(Color::Red, 0);
+//     ledController->toggleLED(Color::Green, 0);
+//     startTime = 0;
+// }
+
+// void Timed::exitProcedure()
+// {
+//     bool forward = true;
+//     motorController->goStraight(forward);
+//     delay(500);
+//     motorController->release();
+//     delay(500);
+//     servoController->release();
+//     forward = false;
+//     motorController->goStraight(forward);
+//     delay(500);
+//     motorController->release();
+//     delay(500);
+//     startTime = 0;
+// }
