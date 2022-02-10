@@ -1,16 +1,13 @@
 #include <Arduino.h>
+#include <Servo.h>
+
+Servo servo;
+
 
 void setup() {
-     pinMode(NINA_RESETN, OUTPUT);         
-     digitalWrite(NINA_RESETN, LOW);
-     
-     Serial.begin(115200);
-     SerialNina.begin(115200);
+  servo.attach(9);
 }
 
 void loop() {
-  if (Serial.available()) {
-  SerialNina.write(Serial.read());}
-  if (SerialNina.available()) {
-  Serial.write(SerialNina.read());}
+  servo.write(20);
 }
