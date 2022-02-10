@@ -65,10 +65,42 @@ class FinishTurn : public ITransition {
         LineSensor *lineSensor = nullptr;
 };
 
-class Grabbing : public ITransition {
+class DetectCross : public ITransition {
     public:
+        DetectCross(
+            Logger *logger = nullptr,
+            MotorController *motorController = nullptr,
+            ServoController *servoController = nullptr,
+            LEDController *ledController = nullptr,
+            LineSensor *lineSensor = nullptr
+        );
         bool shouldStageEnd();
         void exitProcedure();
+
+    private:
+        unsigned long startTime = 0;
+        MotorController *motorController;
+        ServoController *servoController;
+        LEDController *ledController;
+        LineSensor *lineSensor;
+};
+
+class TimedTurn : public ITransition {
+    public:
+        TimedTurn(
+            Logger *logger = nullptr,
+            MotorController *motorController = nullptr,
+            ServoController *servoController = nullptr,
+            LEDController *ledController = nullptr
+        );
+        bool shouldStageEnd();
+        void exitProcedure();
+
+    private:
+        unsigned long startTime = 0;
+        MotorController *motorController;
+        ServoController *servoController;
+        LEDController *ledController;
 };
 
 #endif
