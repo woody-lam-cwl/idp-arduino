@@ -8,7 +8,8 @@ Mode::Mode(
 ) : stage {stage},
     transition {transition},
     suppressTime {suppressTime},
-    turnState {turnState}{}
+    turnState {turnState},
+    nextMode {nullptr} {}
 
 TaskSequence::TaskSequence(Injection &injection) : injection {injection}
 {
@@ -168,7 +169,10 @@ void TaskSequence::loop()
 
 void TaskSequence::setNextMode(Mode *nextMode)
 {
-    if (nextMode == nullptr) return;
+    if (nextMode == nullptr) {
+        injection.logger.log("Reached end of sequence", LoggerLevel::Info);
+        while(1){};
+    }
     activeMode = nextMode;
     EnumStage newStageEnum = activeMode->stage;
     EnumTransition newTransitionEnum = activeMode->transition;

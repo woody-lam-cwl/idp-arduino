@@ -5,7 +5,22 @@ ITransition::ITransition(
     unsigned long suppressTime
 ) : logger {logger},
     startTime {millis()},
-    suppressTime {suppressTime} {}
+    suppressTime {suppressTime},
+    isSuppressed {true} {}
+
+bool ITransition::shouldStageEnd()
+{
+    if (isSuppressed && !isAfterSuppressTime()) return false;
+    return true;
+}
+
+bool ITransition::isAfterSuppressTime()
+{
+    unsigned long currentTime = millis();
+    if (currentTime - startTime < suppressTime) return false;
+    isSuppressed = false;
+    return true;
+}
 
 Once::Once(
     Logger &logger,
@@ -25,8 +40,7 @@ Timed::Timed(
 
 bool Timed::shouldStageEnd()
 {
-    unsigned long currentTime = millis();
-    if (currentTime - startTime < suppressTime) return false;
+    if (!ITransition::shouldStageEnd()) return false;
     logger.log("Stage time limit reached. Now ending.", LoggerLevel::Info);
     return true;
 }
@@ -40,9 +54,9 @@ DetectObstruction::DetectObstruction(
 
 bool DetectObstruction::shouldStageEnd()
 {
+    if (!ITransition::shouldStageEnd()) return false;
     short reading = infrared.getInfraRedReading();
-    unsigned long currentTime = millis();
-    if (reading > IR_ADC_THRESHOLD & currentTime - startTime > suppressTime) {
+    if (reading > IR_ADC_THRESHOLD) {
         logger.log("Obstruction detected. Now ending stage.", LoggerLevel::Info);
         return true;
     }
@@ -58,9 +72,9 @@ DetectLine::DetectLine(
 
 bool DetectLine::shouldStageEnd()
 {
+    if (!ITransition::shouldStageEnd()) return false;
     LineReading reading = lineSensor.getLineReading();
-    unsigned long currentTime = millis();
-    if (reading != LineReading::L111 && currentTime - startTime > suppressTime) {
+    if (reading != LineReading::L111) {
         logger.log("Line detected. Now ending stage.", LoggerLevel::Info);
         return true;
     }
@@ -76,9 +90,9 @@ DetectCross::DetectCross(
 
 bool DetectCross::shouldStageEnd()
 {
+    if (!ITransition::shouldStageEnd()) return false;
     LineReading reading = lineSensor.getLineReading();
-    unsigned long currentTime = millis();
-    if (reading == LineReading::L000 && currentTime - startTime > suppressTime) {
+    if (reading == LineReading::L000) {
         logger.log("Cross detected. Now ending stage.", LoggerLevel::Info);
         return true;
     }

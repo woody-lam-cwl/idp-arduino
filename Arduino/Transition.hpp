@@ -14,12 +14,14 @@ class ITransition {
             Logger &logger,
             unsigned long suppressTime
         );
-        virtual bool shouldStageEnd() = 0;
+        virtual bool shouldStageEnd();
 
     protected:
         Logger &logger;
         unsigned long startTime;
         unsigned long suppressTime;
+        bool isSuppressed = true;
+        bool isAfterSuppressTime();
 };
 
 class Once : public ITransition {

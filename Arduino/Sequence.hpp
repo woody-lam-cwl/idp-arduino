@@ -22,7 +22,7 @@ class Mode {
         EnumTransition transition;
         unsigned long suppressTime = 0;
         TurnState turnState = TurnState::Default;
-        Mode* nextMode;
+        Mode* nextMode = nullptr;
 };
 
 class TaskSequence {
