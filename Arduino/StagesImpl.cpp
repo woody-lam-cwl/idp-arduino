@@ -15,6 +15,7 @@ IStage::~IStage()
     motorController.goStraight();
     delay(500);
     ledController.stopAmber();
+    logger.log("Stage Destroyed", LoggerLevel::Info);
 }
 
 ForwardLineTracing::ForwardLineTracing(
@@ -24,7 +25,10 @@ ForwardLineTracing::ForwardLineTracing(
     LEDController &ledController,
     LineSensor &lineSensor
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    lineSensor {lineSensor} {}
+    lineSensor {lineSensor}
+{
+    logger.log("Starting forward line tracing stage", LoggerLevel::Info);
+}
 
 void ForwardLineTracing::loop()
 {
@@ -37,14 +41,12 @@ void ForwardLineTracing::loop()
             shouldTurnLeft = true;
 
         case LineStatus::TooLeft:
-            // logger.log("Adjusting heading", LoggerLevel::Debug);
             motorController.adjustHeading(shouldTurnLeft);
             break;
 
         case LineStatus::OnLine:
         case LineStatus::Unknown:
         default:
-            // logger.log("Going straight", LoggerLevel::Debug);
             motorController.goStraight();
             break;
     }
@@ -58,22 +60,26 @@ LineStatus ForwardLineTracing::getLineStatus()
     switch (reading) {
         case L000:
         case L101:
+            logger.log("Robot on line", LoggerLevel::DebugStage);
             status = LineStatus::OnLine;
             break;
         
         case L100:
         case L110:
+            logger.log("Robot too left", LoggerLevel::DebugStage);
             status = LineStatus::TooLeft;
             break;
 
         case L001:
         case L011:
+            logger.log("Robot too right", LoggerLevel::DebugStage);
             status = LineStatus::TooRight;
             break;
 
         case L010:
         case L111:
         default:
+            logger.log("Line status unknown", LoggerLevel::DebugStage);
             status = LineStatus::Unknown;
             break;
     }
@@ -88,7 +94,10 @@ Turning::Turning(
     LEDController &ledController,
     bool turnLeft = true
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    turnLeft {turnLeft} {}
+    turnLeft {turnLeft}
+{
+    logger.log("Starting turning stage", LoggerLevel::Info);
+}
 
 void Turning::loop()
 {
@@ -105,7 +114,10 @@ GrabClassifyBlock::GrabClassifyBlock(
     UltrasonicSensor &ultrasonicSensor
 ) : IStage(logger, stateMonitor, motorController, ledController),
     servoController {servoController},
-    ultrasonicSensor {ultrasonicSensor} {}
+    ultrasonicSensor {ultrasonicSensor}
+{
+    logger.log("Starting grabbing and classifying block stage", LoggerLevel::Info);
+}
 
 void GrabClassifyBlock::loop()
 {
@@ -123,7 +135,10 @@ ReleaseBlock::ReleaseBlock(
     LEDController &ledController,
     ServoController &servoController
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    servoController {servoController} {}
+    servoController {servoController}
+{
+    logger.log("Starting releasing block stage", LoggerLevel::Info);
+}
 
 void ReleaseBlock::loop()
 {
@@ -152,7 +167,10 @@ ReverseMotion::ReverseMotion(
     StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController
-) : IStage(logger, stateMonitor, motorController, ledController){};
+) : IStage(logger, stateMonitor, motorController, ledController)
+{
+    logger.log("Starting reversing stage", LoggerLevel::Info);
+}
 
 void ReverseMotion::loop()
 {

@@ -32,7 +32,7 @@ LineReading LineSensor::getLineReading()
     updateLineReading();
     LineReading reading = stateMonitor.lineReadingState.getState();
     String message = "Line sensor reading: " + String(reading);
-    logger.log(message, LoggerLevel::Debug);
+    logger.log(message, LoggerLevel::DebugHardware);
     return reading;
 }
 
@@ -45,7 +45,7 @@ UltrasonicSensor::UltrasonicSensor(
     pinMode(ULTRASONIC_TRIGGER_PIN, OUTPUT);
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
     pinMode(ULTRASONIC_ECHO_PIN, INPUT);
-    logger.log("Ultrasonic sensor initialised", Info);
+    logger.log("Ultrasonic sensor initialised", LoggerLevel::Info);
 }
 
 void UltrasonicSensor::updateDistanceInMM()
@@ -55,6 +55,8 @@ void UltrasonicSensor::updateDistanceInMM()
     digitalWrite(ULTRASONIC_TRIGGER_PIN, LOW);
     unsigned long pulseDuration = pulseIn(ULTRASONIC_ECHO_PIN, HIGH, ULTRASONIC_TIMEOUT_US);
     unsigned long distanceInMM = pulseDuration / ULTRASONIC_MM_CONVERSION;
+    String message = "Ultrasonic sensor measured: " + String(distanceInMM);
+    logger.log(message, LoggerLevel::DebugHardware);
     stateMonitor.ultrasonicDistance.updateState(distanceInMM);
 }
 
@@ -62,8 +64,6 @@ unsigned long UltrasonicSensor::getDistanceInMM()
 {
     updateDistanceInMM();
     unsigned long distanceInMM = stateMonitor.ultrasonicDistance.getState();
-    String message = "Ultrasonic sensor measured: " + String(distanceInMM);
-    logger.log(message, LoggerLevel::Info);
     return distanceInMM;
 }
 
@@ -73,12 +73,14 @@ InfraRed::InfraRed(
 ) : logger {logger},
     stateMonitor {stateMonitor}
 {
-    logger.log("Infrared sensor initialised", Info);
+    logger.log("Infrared sensor initialised", LoggerLevel::Info);
 }
 
 void InfraRed::updateInfraRedReading()
 {
     short reading = analogRead(IR_ANALOG_PIN);
+    String message = "Infrared sensor reading: " + String(reading);
+    logger.log(message, LoggerLevel::DebugHardware);
     stateMonitor.infraRedReading.updateState(reading);
 }
 
@@ -86,7 +88,5 @@ short InfraRed::getInfraRedReading()
 {
     updateInfraRedReading();
     short reading = stateMonitor.infraRedReading.getState();
-    String message = "Infrared sensor reading: " + String(reading);
-    logger.log(message, LoggerLevel::Debug);
     return reading;
 }

@@ -9,14 +9,17 @@ IUnitTest *testPtr;
 
 void setup()
 {
-    LineSensorTest test;
-    test.setup(&injection.logger);
-    testPtr = &test;
+    // LineSensorTest test;
+    // test.setup(&injection.logger);
+    // testPtr = &test;
+
+    injection.logger.setLevel(LoggerLevel::Info);
     injection.logger.log("System Initialised", Info);
 }
 
 void loop()
 {
-    sequence.loop();
     // testPtr->loop();
+
+    sequence.loop();
 }

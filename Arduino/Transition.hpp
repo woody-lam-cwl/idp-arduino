@@ -20,6 +20,8 @@ class ITransition {
         Logger &logger;
         unsigned long startTime;
         unsigned long suppressTime;
+        bool isSuppressed = true;
+        bool isAfterSuppressTime();
 };
 
 class Once : public ITransition {

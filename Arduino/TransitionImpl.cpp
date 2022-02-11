@@ -6,7 +6,17 @@ ITransition::ITransition(
 ) : logger {logger},
     suppressTime {suppressTime}
 {
-    this->startTime = millis();
+    startTime = millis();
+    isSuppressed = true;
+}
+
+bool ITransition::isAfterSuppressTime()
+{
+    unsigned long currentTime = millis();
+    if (currentTime - startTime < suppressTime) return false;
+    isSuppressed = true;
+    logger.log("Suppress time over", LoggerLevel::DebugStage);
+    return true;
 }
 
 Once::Once(
@@ -16,7 +26,7 @@ Once::Once(
 
 bool Once::shouldStageEnd()
 {
-    logger.log("Stage executed once. Now ending.", LoggerLevel::Info);
+    logger.log("Stage executed once. Now ending.", LoggerLevel::DebugStage);
     return true;
 }
 
@@ -27,9 +37,8 @@ Timed::Timed(
 
 bool Timed::shouldStageEnd()
 {
-    unsigned long currentTime = millis();
-    if (currentTime - startTime < suppressTime) return false;
-    logger.log("Stage time limit reached. Now ending.", LoggerLevel::Info);
+    if (isSuppressed && !isAfterSuppressTime()) return false;
+    logger.log("Stage time limit reached. Now ending.", LoggerLevel::DebugStage);
     return true;
 }
 
@@ -42,11 +51,10 @@ DetectObstruction::DetectObstruction(
 
 bool DetectObstruction::shouldStageEnd()
 {
+    if (isSuppressed && !isAfterSuppressTime()) return false;
     short reading = infrared.getInfraRedReading();
-    unsigned long currentTime = millis();
-
-    if (reading > IR_ADC_THRESHOLD & currentTime - startTime > suppressTime) {
-        logger.log("Obstruction detected. Now ending stage.", LoggerLevel::Info);
+    if (reading > IR_ADC_THRESHOLD) {
+        logger.log("Obstruction detected. Now ending stage.", LoggerLevel::DebugStage);
         return true;
     }
     return false;
@@ -61,10 +69,10 @@ DetectLine::DetectLine(
 
 bool DetectLine::shouldStageEnd()
 {
+    if (isSuppressed && !isAfterSuppressTime()) return false;
     LineReading reading = lineSensor.getLineReading();
-    unsigned long currentTime = millis();
-    if (reading != LineReading::L111 && currentTime - startTime > suppressTime) {
-        logger.log("Line detected. Now ending stage.", LoggerLevel::Info);
+    if (reading != LineReading::L111) {
+        logger.log("Line detected. Now ending stage.", LoggerLevel::DebugStage);
         return true;
     }
     return false;
@@ -79,10 +87,10 @@ DetectCross::DetectCross(
 
 bool DetectCross::shouldStageEnd()
 {
+    if (isSuppressed && !isAfterSuppressTime()) return false;
     LineReading reading = lineSensor.getLineReading();
-    unsigned long currentTime = millis();
-    if (reading == LineReading::L000 && currentTime - startTime > suppressTime) {
-        logger.log("Cross detected. Now ending stage.", LoggerLevel::Info);
+    if (reading == LineReading::L000) {
+        logger.log("Cross detected. Now ending stage.", LoggerLevel::DebugStage);
         return true;
     }
     return false;

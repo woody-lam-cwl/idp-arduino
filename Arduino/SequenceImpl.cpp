@@ -164,6 +164,9 @@ void TaskSequence::loop()
 
 void TaskSequence::setNextMode(Mode *nextMode)
 {
+    delete currentStage;
+    delete currentTransition;
+    
     if (nextMode == nullptr) return;
     activeMode = nextMode;
     EnumStage newStageEnum = activeMode->stage;

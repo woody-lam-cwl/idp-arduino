@@ -65,7 +65,7 @@ MotorController::MotorController(
     motorShield = new Adafruit_MotorShield();
 
     if (!motorShield->begin()) {
-        logger.log("Could not find Motor Shield. Check wiring.", Error);
+        logger.log("Could not find Motor Shield. Check wiring.", LoggerLevel::Error);
         while (1);
     }
 
@@ -88,12 +88,15 @@ MotorController::MotorController(
 
 void MotorController::goStraight(bool forward = true)
 {
+    if (forward) logger.log("Motor go straight forward", LoggerLevel::DebugHardware);
+    else logger.log("Motor go straight backward", LoggerLevel::DebugHardware);
     leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
     rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
+    logger.log("Motor adjust heading", LoggerLevel::DebugHardware);
     if (shouldTurnLeft) {
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
@@ -106,6 +109,7 @@ void MotorController::adjustHeading(bool shouldTurnLeft = true)
 
 void MotorController::rotate(bool shouldTurnLeft = true)
 {
+    logger.log("Robot turn", LoggerLevel::DebugHardware);
     if (shouldTurnLeft) {
         leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
         rightMotor->setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
@@ -118,6 +122,7 @@ void MotorController::rotate(bool shouldTurnLeft = true)
 
 void MotorController::release()
 {
+    logger.log("Motor release", LoggerLevel::DebugHardware);
     leftMotor->setMotion(Direction::Neutral);
     rightMotor->setMotion(Direction::Neutral);
 }
@@ -141,6 +146,7 @@ void ServoController::grab()
 {
     leftServo.write(LEFT_SERVO_GRAB_ANGLE);
     rightServo.write(RIGHT_SERVO_GRAB_ANGLE);
+    logger.log("Servo arms GRAB", LoggerLevel::DebugHardware);
     stateMonitor.servoGrabbed.updateState(true);
 }
 
@@ -148,6 +154,7 @@ void ServoController::release()
 {
     leftServo.write(LEFT_SERVO_IDLE_ANGLE);
     rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
+    logger.log("Servo arms RELEASE", LoggerLevel::DebugHardware);
     stateMonitor.servoGrabbed.updateState(false);
 }
 
@@ -189,7 +196,7 @@ void LEDController::stopAmber()
 {
     AmberLED = 0;
     digitalWrite(AMBER_LED_PIN, LOW);
-    logger.log("Amber LED stopped flashing", LoggerLevel::Info);
+    logger.log("Amber LED stopped flashing", LoggerLevel::DebugHardware);
     lastAmberFlashTime = millis();
     stateMonitor.amberFlashing.updateState(false);
 }
@@ -200,13 +207,13 @@ void LEDController::toggleLED(Color color, bool state)
         case Color::Red:
             stateMonitor.redOn.updateState(state);
             digitalWrite(RED_LED_PIN, (state)? HIGH : LOW);
-            logger.log("Red LED state set", LoggerLevel::Info);
+            logger.log("Red LED state set", LoggerLevel::DebugHardware);
             break;
 
         case Color::Green:
             stateMonitor.greenOn.updateState(state);
             digitalWrite(GREEN_LED_PIN, (state)? HIGH : LOW);
-            logger.log("Green LED state set", LoggerLevel::Info);
+            logger.log("Green LED state set", LoggerLevel::DebugHardware);
             break;
 
         default:
