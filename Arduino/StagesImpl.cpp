@@ -8,10 +8,7 @@ IStage::IStage(
 ) : logger {logger},
     stateMonitor {stateMonitor},
     motorController {motorController},
-    ledController {ledController}
-{
-    logger.log("New stage created", LoggerLevel::Info);
-}
+    ledController {ledController} {}
 
 IStage::~IStage()
 {

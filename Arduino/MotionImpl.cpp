@@ -4,7 +4,9 @@ Motor::Motor(
     Logger &logger,
     MotorState &motorState,
     Adafruit_DCMotor* motorAdr = nullptr,
-    bool motorIsNotFlipped = true) : logger {logger}, motorState {motorState}
+    bool motorIsNotFlipped = true
+) : logger {logger},
+    motorState {motorState}
 {
     this->motorState = motorState;
     this->motorAdr = motorAdr;

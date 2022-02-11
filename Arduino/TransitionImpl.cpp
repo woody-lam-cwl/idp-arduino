@@ -5,12 +5,12 @@ ITransition::ITransition(
     unsigned long suppressTime
 ) : logger {logger},
     startTime {millis()},
-    suppressTime {suppressTime}{}
+    suppressTime {suppressTime} {}
 
 Once::Once(
     Logger &logger,
     unsigned long suppressTime = 0
-) : ITransition(logger, suppressTime){};
+) : ITransition(logger, suppressTime) {}
 
 bool Once::shouldStageEnd()
 {
@@ -26,7 +26,6 @@ Timed::Timed(
 bool Timed::shouldStageEnd()
 {
     unsigned long currentTime = millis();
-
     if (currentTime - startTime < suppressTime) return false;
     logger.log("Stage time limit reached. Now ending.", LoggerLevel::Info);
     return true;
@@ -43,7 +42,6 @@ bool DetectObstruction::shouldStageEnd()
 {
     short reading = infrared.getInfraRedReading();
     unsigned long currentTime = millis();
-
     if (reading > IR_ADC_THRESHOLD & currentTime - startTime > suppressTime) {
         logger.log("Obstruction detected. Now ending stage.", LoggerLevel::Info);
         return true;
