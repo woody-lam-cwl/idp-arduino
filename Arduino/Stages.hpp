@@ -22,7 +22,7 @@ class IStage {
             MotorController &motorController,
             LEDController &ledController
         );
-        virtual void loop() = 0;
+        virtual void loop();
         IStage *nextStage;
         ~IStage();
 
@@ -31,6 +31,8 @@ class IStage {
         StateMonitor &stateMonitor;
         MotorController &motorController;
         LEDController &ledController;
+        unsigned long loopTimes;
+        unsigned long startTime;
 };
 
 class ForwardLineTracing : public IStage {

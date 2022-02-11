@@ -15,6 +15,8 @@ void setup()
     LineSensorTest test;
     test.setup(&injection->logger);
     testPtr = &test;
+    
+    injection->logger.setLevel(LoggerLevel::DebugStage);
     injection->logger.log("System Initialised", Info);
 }
 

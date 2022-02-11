@@ -67,7 +67,7 @@ MotorController::MotorController(
     motorShield = new Adafruit_MotorShield();
 
     if (!motorShield->begin()) {
-        logger.log("Could not find Motor Shield. Check wiring.", Error);
+        logger.log("Could not find Motor Shield. Check wiring.", LoggerLevel::Error);
         while (1);
     }
 
@@ -90,6 +90,8 @@ MotorController::MotorController(
 
 void MotorController::goStraight(bool forward = true)
 {
+    if (forward) logger.log("Motor going straight forward", LoggerLevel::DebugHardware);
+    else logger.log("Motor going straight backward", LoggerLevel::DebugHardware);
     leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
     rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
 }
@@ -97,10 +99,12 @@ void MotorController::goStraight(bool forward = true)
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
+        logger.log("Motor adjusting to left", LoggerLevel::DebugHardware);
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
     }
     else {
+        logger.log("Motor adjusting to right", LoggerLevel::DebugHardware);
         leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
     }
@@ -108,6 +112,7 @@ void MotorController::adjustHeading(bool shouldTurnLeft = true)
 
 void MotorController::rotate(bool shouldTurnLeft = true)
 {
+    logger.log("Robot turning", LoggerLevel::DebugHardware);
     if (shouldTurnLeft) {
         leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, CRUISE_SPEED);
@@ -120,6 +125,7 @@ void MotorController::rotate(bool shouldTurnLeft = true)
 
 void MotorController::release()
 {
+    logger.log("Motor released", LoggerLevel::DebugHardware);
     leftMotor->setMotion(Direction::Neutral);
     rightMotor->setMotion(Direction::Neutral);
 }
@@ -132,15 +138,13 @@ ServoController::ServoController(
 {
     leftServo.attach(LEFT_SERVO_PIN);
     rightServo.attach(RIGHT_SERVO_PIN);
-    leftServo.write(LEFT_SERVO_IDLE_ANGLE);
-    rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
-    stateMonitor.servoGrabbed.updateState(false);
-
+    release();
     logger.log("Servo controller initialised", LoggerLevel::Info);
 }
 
 void ServoController::grab()
 {
+    logger.log("Servo arms grabbed", LoggerLevel::DebugHardware);
     leftServo.write(LEFT_SERVO_GRAB_ANGLE);
     rightServo.write(RIGHT_SERVO_GRAB_ANGLE);
     stateMonitor.servoGrabbed.updateState(true);
@@ -148,6 +152,7 @@ void ServoController::grab()
 
 void ServoController::release()
 {
+    logger.log("Servo arms released", LoggerLevel::DebugHardware);
     leftServo.write(LEFT_SERVO_IDLE_ANGLE);
     rightServo.write(RIGHT_SERVO_IDLE_ANGLE);
     stateMonitor.servoGrabbed.updateState(false);
@@ -157,27 +162,21 @@ LEDController::LEDController(
     Logger &logger,
     StateMonitor &stateMonitor
 ) : logger {logger},
-    stateMonitor {stateMonitor}
+    stateMonitor {stateMonitor},
+    amberFlashPeriod {1000 / AMBER_LED_FREQUENCY / 2},
+    lastAmberFlashTime {0}
 {
     pinMode(AMBER_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
     pinMode(GREEN_LED_PIN, OUTPUT);
-    digitalWrite(AMBER_LED_PIN, LOW);
-    digitalWrite(RED_LED_PIN, LOW);
-    digitalWrite(GREEN_LED_PIN, LOW);
-    AmberLED = 0;
-    amberFlashPeriod = 1000 / AMBER_LED_FREQUENCY / 2;
-    lastAmberFlashTime = 0;
-
-    stateMonitor.amberFlashing.updateState(false);
-    stateMonitor.redOn.updateState(false);
-    stateMonitor.greenOn.updateState(false);
-
+    stopAmber();
+    resetBlockLED();
     logger.log("LED controller initialised", LoggerLevel::Info);
 }
 
 void LEDController::flashAmber()
 {
+    logger.log("Amber LED flashing", LoggerLevel::DebugHardware);
     stateMonitor.amberFlashing.updateState(true);
     unsigned long currentTime = millis();
     if (currentTime - lastAmberFlashTime > amberFlashPeriod) {
@@ -191,8 +190,7 @@ void LEDController::stopAmber()
 {
     AmberLED = 0;
     digitalWrite(AMBER_LED_PIN, LOW);
-    logger.log("Amber LED stopped flashing", LoggerLevel::Info);
-    lastAmberFlashTime = millis();
+    logger.log("Amber LED stopped flashing", LoggerLevel::DebugHardware);
     stateMonitor.amberFlashing.updateState(false);
 }
 
@@ -202,17 +200,17 @@ void LEDController::toggleLED(Color color, bool state)
         case Color::Red:
             stateMonitor.redOn.updateState(state);
             digitalWrite(RED_LED_PIN, (state)? HIGH : LOW);
-            logger.log("Red LED state set", LoggerLevel::Info);
+            logger.log("Red LED state set", LoggerLevel::DebugHardware);
             break;
 
         case Color::Green:
             stateMonitor.greenOn.updateState(state);
             digitalWrite(GREEN_LED_PIN, (state)? HIGH : LOW);
-            logger.log("Green LED state set", LoggerLevel::Info);
+            logger.log("Green LED state set", LoggerLevel::DebugHardware);
             break;
 
         default:
-            logger.log("Invalid LED Color", LoggerLevel::Error);
+            logger.log("Invalid LED Color", LoggerLevel::DebugHardware);
             break;
     }
 }

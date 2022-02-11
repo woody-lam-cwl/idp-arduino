@@ -6,7 +6,8 @@
 #include "Constants.hpp"
 
 enum LoggerLevel {
-    Debug,
+    DebugHardware,
+    DebugStage,
     Info,
     Error,
     Fatal
@@ -15,7 +16,11 @@ enum LoggerLevel {
 class Logger {
     public:
         Logger();
-        void log(String message, LoggerLevel level);
+        void log(String message, LoggerLevel level = LoggerLevel::Info);
+        void setLevel(LoggerLevel level);
+
+    private:
+        LoggerLevel logLevel = LoggerLevel::Info;
 };
 
 #endif

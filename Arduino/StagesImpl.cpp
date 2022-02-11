@@ -8,13 +8,23 @@ IStage::IStage(
 ) : logger {logger},
     stateMonitor {stateMonitor},
     motorController {motorController},
-    ledController {ledController} {}
+    ledController {ledController},
+    loopTimes {0},
+    startTime {millis()} {}
+
+void IStage::loop()
+{
+    loopTimes++;
+}
 
 IStage::~IStage()
 {
-    motorController.goStraight();
+    motorController.release();
     delay(500);
     ledController.stopAmber();
+    logger.log("Stage loop times: " + String(loopTimes), LoggerLevel::DebugStage);
+    unsigned long stageDuration = millis() - startTime;
+    logger.log("Stage duration: " + String(stageDuration), LoggerLevel::DebugStage);
     logger.log("Stage destroyed", LoggerLevel::Info);
 }
 
@@ -25,10 +35,14 @@ ForwardLineTracing::ForwardLineTracing(
     LEDController &ledController,
     LineSensor &lineSensor
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    lineSensor {lineSensor} {}
+    lineSensor {lineSensor}
+{
+    logger.log("Starting forward line tracing stage", LoggerLevel::Info);
+}
 
 void ForwardLineTracing::loop()
 {
+    IStage::loop();
     LineStatus status = getLineStatus();
     bool shouldTurnLeft = false;
 
@@ -38,14 +52,12 @@ void ForwardLineTracing::loop()
             shouldTurnLeft = true;
 
         case LineStatus::TooLeft:
-            // logger.log("Adjusting heading", LoggerLevel::Debug);
             motorController.adjustHeading(shouldTurnLeft);
             break;
 
         case LineStatus::OnLine:
         case LineStatus::Unknown:
         default:
-            // logger.log("Going straight", LoggerLevel::Debug);
             motorController.goStraight();
             break;
     }
@@ -59,22 +71,26 @@ LineStatus ForwardLineTracing::getLineStatus()
     switch (reading) {
         case L000:
         case L101:
+            logger.log("Robot on line", LoggerLevel::DebugHardware);
             status = LineStatus::OnLine;
             break;
         
         case L100:
         case L110:
+            logger.log("Robot too left", LoggerLevel::DebugHardware);
             status = LineStatus::TooLeft;
             break;
 
         case L001:
         case L011:
+            logger.log("Robot too right", LoggerLevel::DebugHardware);
             status = LineStatus::TooRight;
             break;
 
         case L010:
         case L111:
         default:
+            logger.log("Line status unknown", LoggerLevel::DebugHardware);
             status = LineStatus::Unknown;
             break;
     }
@@ -89,10 +105,14 @@ Turning::Turning(
     LEDController &ledController,
     bool turnLeft = true
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    turnLeft {turnLeft} {}
+    turnLeft {turnLeft}
+{
+    logger.log("Starting turning stage", LoggerLevel::Info);
+}
 
 void Turning::loop()
 {
+    IStage::loop();
     ledController.flashAmber();
     motorController.rotate(turnLeft);
 }
@@ -106,10 +126,14 @@ GrabClassifyBlock::GrabClassifyBlock(
     UltrasonicSensor &ultrasonicSensor
 ) : IStage(logger, stateMonitor, motorController, ledController),
     servoController {servoController},
-    ultrasonicSensor {ultrasonicSensor} {}
+    ultrasonicSensor {ultrasonicSensor}
+{
+    logger.log("Starting grabbing and classifying block stage", LoggerLevel::Info);
+}
 
 void GrabClassifyBlock::loop()
 {
+    IStage::loop();
     servoController.grab();
     unsigned long distanceInMM = ultrasonicSensor.getDistanceInMM();
     BlockType blockType = (distanceInMM < ULTRASONIC_THRESHOLD)? BlockType::CoarseBlock : BlockType::FineBlock;
@@ -124,10 +148,14 @@ ReleaseBlock::ReleaseBlock(
     LEDController &ledController,
     ServoController &servoController
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    servoController {servoController} {}
+    servoController {servoController}
+{
+    logger.log("Starting releasing block stage", LoggerLevel::Info);
+}
 
 void ReleaseBlock::loop()
 {
+    IStage::loop();
     bool goForward = true;
     ledController.flashAmber();
     motorController.goStraight(goForward);
@@ -153,10 +181,14 @@ ReverseMotion::ReverseMotion(
     StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController
-) : IStage(logger, stateMonitor, motorController, ledController){};
+) : IStage(logger, stateMonitor, motorController, ledController)
+{
+    logger.log("Starting reversing stage", LoggerLevel::Info);
+}
 
 void ReverseMotion::loop()
 {
+    IStage::loop();
     ledController.flashAmber();
     motorController.goStraight(false);
 }
