@@ -24,6 +24,7 @@ class Injection {
     public:
         Injection();
         Logger logger;
+        StateMonitor stateMonitor;
         
         IStage* getNewStage(
             IStage *currentStage,
@@ -35,14 +36,14 @@ class Injection {
             EnumTransition transition,
             unsigned long suppressTime = 0
         );
-        MotorController motorController;
 
+        LineSensor lineSensor;
 
     private:
+        MotorController motorController;
         ServoController servoController;
         LEDController ledController;
 
-        LineSensor lineSensor;
         UltrasonicSensor ultrasonicSensor;
         InfraRed infraRed;
 

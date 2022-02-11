@@ -1,6 +1,10 @@
 #include "Sensor.hpp"
 
-LineSensor::LineSensor(Logger &logger) : logger {logger}
+LineSensor::LineSensor(
+    Logger &logger,
+    StateMonitor &stateMonitor
+) : logger {logger},
+    stateMonitor {stateMonitor}
 {
 
     pinMode(LINE_SENSOR_LEFT_PIN, INPUT);
@@ -22,7 +26,9 @@ LineReading LineSensor::getLineReading()
     reading += rightSensorReading;
 
     String message = "Line sensor reading: " + String(reading);
-    // logger.log(message, LoggerLevel::Debug);
+    
+    logger.log(message, LoggerLevel::Debug);
+    stateMonitor.lineReading = (LineReading) reading;
     return (LineReading) reading;
 }
 

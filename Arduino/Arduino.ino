@@ -6,6 +6,7 @@
 Injection *injectionPtr;
 IUnitTest *testPtr;
 IStage *stagePtr;
+LineSensor *lineSensor;
 
 void setup()
 {
@@ -22,5 +23,8 @@ void setup()
 
 void loop()
 {
-    stagePtr->loop();
+    injectionPtr->lineSensor.getLineReading();
+    LineReading reading = injectionPtr->stateMonitor.lineReading;
+    injectionPtr->logger.log("MAIN:" + String(reading), LoggerLevel::Debug);
+    // testPtr->loop();
 }

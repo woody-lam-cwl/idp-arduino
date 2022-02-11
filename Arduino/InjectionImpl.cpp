@@ -2,10 +2,11 @@
 
 Injection::Injection()
     : logger {},
+    stateMonitor {StateMonitor(logger)},
     motorController {MotorController(logger)},
     servoController {ServoController(logger)},
     ledController {LEDController(logger)},
-    lineSensor {LineSensor(logger)},
+    lineSensor {LineSensor(logger, stateMonitor)},
     ultrasonicSensor {UltrasonicSensor(logger)},
     infraRed {InfraRed{logger}} {}
 

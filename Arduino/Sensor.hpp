@@ -4,25 +4,16 @@
 #include <Arduino.h>
 #include "Constants.hpp"
 #include "Logger.hpp"
-
-enum LineReading : byte {
-    L000 = 0U,
-    L001 = 1U,
-    L010 = 2U,
-    L011 = 3U,
-    L100 = 4U,
-    L101 = 5U,
-    L110 = 6U,
-    L111 = 7U,
-};
+#include "StateMonitor.hpp"
 
 class LineSensor {
     public:
-        LineSensor(Logger &logger);
+        LineSensor(Logger &logger, StateMonitor &stateMonitor);
         LineReading getLineReading();
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
 };
 
 class UltrasonicSensor {
