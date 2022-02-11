@@ -42,7 +42,7 @@ class MotorController {
         void goStraight(bool forward = true);
         void adjustHeading(bool shouldTurnLeft = true);
         void rotate(bool shouldTurnLeft = true);
-        void release();
+        void neutral();
 
     private:
         Logger &logger;

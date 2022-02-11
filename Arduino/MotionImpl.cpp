@@ -123,7 +123,7 @@ void MotorController::rotate(bool shouldTurnLeft = true)
     }
 }
 
-void MotorController::release()
+void MotorController::neutral()
 {
     logger.log("Motor released", LoggerLevel::DebugHardware);
     leftMotor->setMotion(Direction::Neutral);

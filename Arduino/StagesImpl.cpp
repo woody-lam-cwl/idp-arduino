@@ -19,13 +19,13 @@ void IStage::loop()
 
 IStage::~IStage()
 {
-    motorController.release();
+    motorController.neutral();
     delay(500);
     ledController.stopAmber();
     logger.log("Stage loop times: " + String(loopTimes), LoggerLevel::DebugStage);
     unsigned long stageDuration = millis() - startTime;
     logger.log("Stage duration: " + String(stageDuration), LoggerLevel::DebugStage);
-    logger.log("Stage destroyed", LoggerLevel::Info);
+    logger.log("Stage ended", LoggerLevel::Info);
 }
 
 ForwardLineTracing::ForwardLineTracing(
@@ -160,7 +160,7 @@ void ReleaseBlock::loop()
     ledController.flashAmber();
     motorController.goStraight(goForward);
     delay(300);
-    motorController.release();
+    motorController.neutral();
     delay(500);
     ledController.stopAmber();
 
@@ -171,7 +171,7 @@ void ReleaseBlock::loop()
     ledController.flashAmber();
     motorController.goStraight(goForward);
     delay(700);
-    motorController.release();
+    motorController.neutral();
     delay(500);
     ledController.stopAmber();
 }
