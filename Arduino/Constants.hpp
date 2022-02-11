@@ -41,9 +41,12 @@
 #define LINE_SENSOR_CENTER_PIN      6
 #define LINE_SENSOR_RIGHT_PIN       7
 
-#define REBOUNCE_TIME_MS            1500
-#define TURN_SUPPRESS_LINE_TIME_MS  2000
-#define TURN_90DEG_TIME_MS          2000
+#define RAMP_DETECT_SUPPRESS_MS     1500
+#define SECURE_BLOCK_MS             1000
+#define BACK_ROBOT_MS               500
+#define TURN_SUPPRESS_LINE_MS       3000
+#define TURN_90DEG_MS               2000
 #define CROSS_DETECT_SUPPRESS_MS    10000
+#define HOME_CROSS_DETECT_SUPPRESS_MS 500
 
 #endif

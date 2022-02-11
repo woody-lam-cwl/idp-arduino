@@ -1,30 +1,22 @@
 #include "Constants.hpp"
-#include "RuntimeTest.hpp"
-#include "Stages.hpp"
 #include "Injection.hpp"
+#include "UnitTest.hpp"
+#include "Sequence.hpp"
 
-Injection *injectionPtr;
+Injection injection;
 IUnitTest *testPtr;
-IStage *stagePtr;
-LineSensor *lineSensor;
+TaskSequence sequence(injection);
 
 void setup()
 {
-    Injection injection;
-    injectionPtr = &injection;
-
     LineSensorTest test;
-    test.setup(&injectionPtr->logger);
+    test.setup(&injection.logger);
     testPtr = &test;
-
-    stagePtr = injectionPtr->getNewStage(nullptr, EnumStage::ForwardLineTracing);
-    injectionPtr->logger.log("System Initialised", Info);
+    injection.logger.log("System Initialised", Info);
 }
 
 void loop()
 {
-    injectionPtr->lineSensor.getLineReading();
-    LineReading reading = injectionPtr->stateMonitor.lineReading;
-    injectionPtr->logger.log("MAIN:" + String(reading), LoggerLevel::Debug);
+    sequence.loop();
     // testPtr->loop();
 }
