@@ -2,9 +2,11 @@
 
 IStage::IStage(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController
 ) : logger {logger},
+    stateMonitor {stateMonitor},
     motorController {motorController},
     ledController {ledController} {}
 
@@ -17,10 +19,11 @@ IStage::~IStage()
 
 ForwardLineTracing::ForwardLineTracing(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController,
     LineSensor &lineSensor
-) : IStage(logger, motorController, ledController),
+) : IStage(logger, stateMonitor, motorController, ledController),
     lineSensor {lineSensor} {}
 
 void ForwardLineTracing::loop()
@@ -80,10 +83,11 @@ LineStatus ForwardLineTracing::getLineStatus()
 
 Turning::Turning(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController,
     bool turnLeft = true
-) : IStage(logger, motorController, ledController),
+) : IStage(logger, stateMonitor, motorController, ledController),
     turnLeft {turnLeft} {}
 
 void Turning::loop()
@@ -94,11 +98,12 @@ void Turning::loop()
 
 GrabClassifyBlock::GrabClassifyBlock(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController,
     ServoController &servoController,
     UltrasonicSensor &ultrasonicSensor
-) : IStage(logger, motorController, ledController),
+) : IStage(logger, stateMonitor, motorController, ledController),
     servoController {servoController},
     ultrasonicSensor {ultrasonicSensor} {}
 
@@ -106,16 +111,18 @@ void GrabClassifyBlock::loop()
 {
     servoController.grab();
     unsigned long distanceInMM = ultrasonicSensor.getDistanceInMM();
-    Color blockTypeColor = (distanceInMM < ULTRASONIC_THRESHOLD)? Color::Red : Color::Green;
-    ledController.turnOnBlockLED(blockTypeColor);
+    BlockType blockType = (distanceInMM < ULTRASONIC_THRESHOLD)? BlockType::CoarseBlock : BlockType::FineBlock;
+    stateMonitor.blockType.updateState(blockType);
+    ledController.turnOnBlockLED((blockType == BlockType::CoarseBlock)? Color::Red : Color::Green);
 }
 
 ReleaseBlock::ReleaseBlock(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController,
     ServoController &servoController
-) : IStage(logger, motorController, ledController),
+) : IStage(logger, stateMonitor, motorController, ledController),
     servoController {servoController} {}
 
 void ReleaseBlock::loop()
@@ -142,9 +149,10 @@ void ReleaseBlock::loop()
 
 ReverseMotion::ReverseMotion(
     Logger &logger,
+    StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController
-) : IStage(logger, motorController, ledController){};
+) : IStage(logger, stateMonitor, motorController, ledController){};
 
 void ReverseMotion::loop()
 {

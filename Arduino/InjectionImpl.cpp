@@ -85,6 +85,7 @@ ForwardLineTracing* Injection::getNewForwardLineTracing()
 {
     return new ForwardLineTracing(
         logger,
+        stateMonitor,
         motorController,
         ledController,
         lineSensor
@@ -95,6 +96,7 @@ Turning* Injection::getNewTurning(bool turnLeft = true)
 {
     return new Turning(
         logger,
+        stateMonitor,
         motorController,
         ledController,
         turnLeft
@@ -105,6 +107,7 @@ GrabClassifyBlock* Injection::getNewGrabClassifyBlock()
 {
     return new GrabClassifyBlock(
         logger,
+        stateMonitor,
         motorController,
         ledController,
         servoController,
@@ -116,6 +119,7 @@ ReleaseBlock* Injection::getNewReleaseBlock()
 {
     return new ReleaseBlock(
         logger,
+        stateMonitor,
         motorController,
         ledController,
         servoController
@@ -126,6 +130,7 @@ ReverseMotion* Injection::getNewReverseMotion()
 {
     return new ReverseMotion(
         logger,
+        stateMonitor,
         motorController,
         ledController
     );

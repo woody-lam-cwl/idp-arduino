@@ -18,6 +18,7 @@ class IStage {
     public:
         IStage(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController
         );
@@ -27,6 +28,7 @@ class IStage {
 
     protected:
         Logger &logger;
+        StateMonitor &stateMonitor;
         MotorController &motorController;
         LEDController &ledController;
 };
@@ -35,6 +37,7 @@ class ForwardLineTracing : public IStage {
     public:
         ForwardLineTracing(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController,
             LineSensor &lineSensor
@@ -50,6 +53,7 @@ class Turning : public IStage {
     public:
         Turning(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController,
             bool turnLeft = true
@@ -64,6 +68,7 @@ class GrabClassifyBlock : public IStage {
     public:
         GrabClassifyBlock(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController,
             ServoController &servoController,
@@ -80,6 +85,7 @@ class ReleaseBlock : public IStage {
     public:
         ReleaseBlock(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController,
             ServoController &servoController
@@ -94,6 +100,7 @@ class ReverseMotion : public IStage {
     public:
         ReverseMotion(
             Logger &logger,
+            StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &LEDController
         );
