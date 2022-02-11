@@ -48,5 +48,6 @@
 #define TURN_90DEG_MS               2000
 #define CROSS_DETECT_SUPPRESS_MS    10000
 #define HOME_CROSS_DETECT_SUPPRESS_MS 500
+#define GO_HOME_MS                  2000
 
 #endif

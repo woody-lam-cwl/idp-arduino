@@ -4,8 +4,8 @@
 #include "Sequence.hpp"
 
 Injection injection;
-IUnitTest *testPtr;
 TaskSequence sequence(injection);
+IUnitTest *testPtr;
 
 void setup()
 {

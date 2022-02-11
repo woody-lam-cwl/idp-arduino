@@ -145,6 +145,14 @@ TaskSequence::TaskSequence(Injection &injection) : injection {injection}
     goHomeForUTurn1->nextMode = uTurnForBlock2;
     uTurnForBlock2->nextMode = homeToBeforeRamp1;
 
+    // Mode* goHomeToEnd =
+    //     new Mode(
+    //         EnumStage::ForwardLineTracing,
+    //         EnumTransition::Timed,
+    //         GO_HOME_MS
+    //     );
+    // homeCrossAfterDrop1->nextMode = goHomeToEnd;
+
     setNextMode(homeToBeforeRamp1);
 }
 

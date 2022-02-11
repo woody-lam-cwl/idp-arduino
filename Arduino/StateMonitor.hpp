@@ -57,8 +57,6 @@ class MotorState{
 
 class StateMonitor{
     public:
-        StateMonitor();
-
         MotorState leftMotorState;
         MotorState rightMotorState;
         State<bool> servoGrabbed;
@@ -73,9 +71,6 @@ class StateMonitor{
         State<BlockType> blockType;
         State<EnumStage> activeStage;
         State<EnumTransition> activeTransition;
-
-    private:
-        Logger &logger;
 };
 
 #endif
