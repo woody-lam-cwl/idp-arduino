@@ -2,21 +2,19 @@
 
 Injection::Injection()
     : logger {},
-    stateMonitor {StateMonitor(logger)},
-    motorController {MotorController(logger)},
-    servoController {ServoController(logger)},
-    ledController {LEDController(logger)},
+    stateMonitor {},
+    motorController {MotorController(logger, stateMonitor)},
+    servoController {ServoController(logger, stateMonitor)},
+    ledController {LEDController(logger, stateMonitor)},
     lineSensor {LineSensor(logger, stateMonitor)},
-    ultrasonicSensor {UltrasonicSensor(logger)},
-    infraRed {InfraRed{logger}} {}
+    ultrasonicSensor {UltrasonicSensor(logger, stateMonitor)},
+    infraRed {InfraRed{logger, stateMonitor}} {}
 
 IStage* Injection::getNewStage(
-    IStage *currentStage,
     EnumStage stage,
     bool turnLeft = true
 )
 {
-    delete currentStage;
     IStage* newStage;
     switch (stage) {
         case EnumStage::ForwardLineTracing:
@@ -49,14 +47,11 @@ IStage* Injection::getNewStage(
 }
 
 ITransition* Injection::getNewTransition(
-    ITransition *currentTransition,
     EnumTransition transition,
     unsigned long suppressTime = 0
 )
 {
-    delete currentTransition;
     ITransition* newTransition;
-
     switch (transition) {
         case EnumTransition::Once:
             newTransition = getNewOnce(suppressTime);

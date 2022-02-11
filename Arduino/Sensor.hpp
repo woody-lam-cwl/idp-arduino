@@ -8,31 +8,44 @@
 
 class LineSensor {
     public:
-        LineSensor(Logger &logger, StateMonitor &stateMonitor);
+        LineSensor(
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         LineReading getLineReading();
 
     private:
         Logger &logger;
         StateMonitor &stateMonitor;
+        void updateLineReading();
 };
 
 class UltrasonicSensor {
     public:
-        UltrasonicSensor(Logger &logger);
+        UltrasonicSensor(
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         unsigned long getDistanceInMM();
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
+        void updateDistanceInMM();
 };
 
 class InfraRed {
     public:
         InfraRed(
-            Logger &logger);
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         short getInfraRedReading();
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
+        void updateInfraRedReading();
 };
 
 #endif

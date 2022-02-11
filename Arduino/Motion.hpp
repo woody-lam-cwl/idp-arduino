@@ -8,36 +8,25 @@
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 #include "Constants.hpp"
 #include "Logger.hpp"
-
-enum class Direction : byte {
-    Drive,
-    Reverse,
-    Neutral
-};
+#include "StateMonitor.hpp"
 
 enum class Color : byte {
     Red,
     Green
 };
 
-class MotorState {
-    public:
-        byte speed;
-        Direction direction;
-};
-
 class Motor {
     public:
         Motor(
             Logger &logger,
-            MotorState *motorState = nullptr,
+            MotorState &motorState,
             Adafruit_DCMotor *motorAdr = nullptr,
             bool motorIsNotFlipped = true);
         void setMotion(Direction direction, byte speed = 0U);
 
     private:
         Logger &logger;
-        MotorState *motorState;
+        MotorState &motorState;
         Adafruit_DCMotor *motorAdr;
         bool motorIsNotFlipped;
         byte getMotorDirection(Direction direction);
@@ -46,7 +35,10 @@ class Motor {
 
 class MotorController {
     public:
-        MotorController(Logger &logger);
+        MotorController(
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         void goStraight(bool forward = true);
         void adjustHeading(bool shouldTurnLeft = true);
         void rotate(bool shouldTurnLeft = true);
@@ -54,6 +46,7 @@ class MotorController {
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
         Adafruit_MotorShield *motorShield;
         Motor *leftMotor;
         Motor *rightMotor;
@@ -61,19 +54,26 @@ class MotorController {
 
 class ServoController {
     public:
-        ServoController(Logger &logger);
+        ServoController(
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         void grab();
         void release();
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
         Servo leftServo;
         Servo rightServo;
 };
 
 class LEDController {
     public:
-        LEDController(Logger &logger);
+        LEDController(
+            Logger &logger,
+            StateMonitor &stateMonitor
+        );
         void flashAmber();
         void stopAmber();
         void turnOnBlockLED(Color color);
@@ -81,6 +81,7 @@ class LEDController {
 
     private:
         Logger &logger;
+        StateMonitor &stateMonitor;
         void toggleLED(Color color, bool state);
         unsigned int amberFlashPeriod;
         unsigned long lastAmberFlashTime;

@@ -14,8 +14,6 @@ enum class LineStatus : byte {
     Unknown,
 };
 
-class ITransition;
-
 class IStage {
     public:
         IStage(
@@ -25,7 +23,6 @@ class IStage {
         );
         virtual void loop() = 0;
         IStage *nextStage;
-        ITransition *stageTransition;
         ~IStage();
 
     protected:
