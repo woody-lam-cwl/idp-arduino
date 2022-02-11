@@ -3,20 +3,23 @@
 #include "UnitTest.hpp"
 #include "Sequence.hpp"
 
-Injection injection;
-TaskSequence sequence(injection);
+Injection *injection;
+TaskSequence *sequence;
 IUnitTest *testPtr;
 
 void setup()
 {
+    injection = new Injection();
+    sequence = new TaskSequence(*injection);
+    
     LineSensorTest test;
-    test.setup(&injection.logger);
+    test.setup(&injection->logger);
     testPtr = &test;
-    injection.logger.log("System Initialised", Info);
+    injection->logger.log("System Initialised", Info);
 }
 
 void loop()
 {
-    sequence.loop();
+    sequence->loop();
     // testPtr->loop();
 }

@@ -4,10 +4,8 @@ ITransition::ITransition(
     Logger &logger,
     unsigned long suppressTime
 ) : logger {logger},
-    suppressTime {suppressTime}
-{
-    this->startTime = millis();
-}
+    startTime {millis()},
+    suppressTime {suppressTime}{}
 
 Once::Once(
     Logger &logger,
@@ -22,12 +20,13 @@ bool Once::shouldStageEnd()
 
 Timed::Timed(
     Logger &logger,
-    unsigned long suppresTime
-) : ITransition(logger, suppressTime){};
+    unsigned long suppressTime
+) : ITransition(logger, suppressTime) {}
 
 bool Timed::shouldStageEnd()
 {
     unsigned long currentTime = millis();
+
     if (currentTime - startTime < suppressTime) return false;
     logger.log("Stage time limit reached. Now ending.", LoggerLevel::Info);
     return true;

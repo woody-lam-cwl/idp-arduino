@@ -14,13 +14,13 @@
 #define RIGHT_MOTOR_PORT            4
 #define LEFT_MOTOR_NO_FLIP          true
 #define RIGHT_MOTOR_NO_FLIP         true
-#define LEFT_TO_RIGHT_POWER_RATIO   1.055
-#define CRUISE_SPEED                245
-#define ADJUSTMENT_INNER_SPEED      220
+#define RIGHT_TO_LEFT_POWER_RATIO   1.115
+#define CRUISE_SPEED                255
+#define ADJUSTMENT_INNER_SPEED      180
 #define ADJUSTMENT_OUTER_SPEED      255
 
-#define LEFT_SERVO_PIN              8
-#define RIGHT_SERVO_PIN             9
+#define LEFT_SERVO_PIN              9
+#define RIGHT_SERVO_PIN             8
 #define LEFT_SERVO_GRAB_ANGLE       35
 #define LEFT_SERVO_IDLE_ANGLE       60
 #define RIGHT_SERVO_GRAB_ANGLE      95
@@ -41,7 +41,7 @@
 #define LINE_SENSOR_CENTER_PIN      6
 #define LINE_SENSOR_RIGHT_PIN       7
 
-#define RAMP_DETECT_SUPPRESS_MS     1500
+#define RAMP_DETECT_SUPPRESS_MS     1000
 #define SECURE_BLOCK_MS             1000
 #define BACK_ROBOT_MS               500
 #define TURN_SUPPRESS_LINE_MS       3000

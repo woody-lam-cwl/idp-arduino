@@ -8,7 +8,7 @@ Mode::Mode(
 ) : stage {stage},
     transition {transition},
     suppressTime {suppressTime},
-    turnState {turnState} {}
+    turnState {turnState}{}
 
 TaskSequence::TaskSequence(Injection &injection) : injection {injection}
 {
@@ -159,7 +159,11 @@ TaskSequence::TaskSequence(Injection &injection) : injection {injection}
 void TaskSequence::loop()
 {
     currentStage->loop();
-    if (currentTransition->shouldStageEnd()) setNextMode(activeMode->nextMode);
+    if (currentTransition->shouldStageEnd()) {
+        delete currentStage;
+        delete currentTransition;
+        setNextMode(activeMode->nextMode);
+    }
 }
 
 void TaskSequence::setNextMode(Mode *nextMode)
@@ -169,11 +173,8 @@ void TaskSequence::setNextMode(Mode *nextMode)
     EnumStage newStageEnum = activeMode->stage;
     EnumTransition newTransitionEnum = activeMode->transition;
     bool turnLeft = shouldTurnLeft(activeMode->turnState);
-    IStage* newStage = injection.getNewStage(newStageEnum, turnLeft);
-    ITransition* newTransition = injection.getNewTransition(newTransitionEnum, activeMode->suppressTime);
-
-    currentStage = newStage;
-    currentTransition = newTransition;
+    currentStage = injection.getNewStage(newStageEnum, turnLeft);
+    currentTransition = injection.getNewTransition(newTransitionEnum, activeMode->suppressTime);
     injection.stateMonitor.activeStage.updateState(newStageEnum);
     injection.stateMonitor.activeTransition.updateState(newTransitionEnum);
 }

@@ -88,18 +88,18 @@ MotorController::MotorController(
 
 void MotorController::goStraight(bool forward = true)
 {
-    leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
-    rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+    leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+    rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
-        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
     }
     else {
-        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
     }
 }
@@ -107,12 +107,12 @@ void MotorController::adjustHeading(bool shouldTurnLeft = true)
 void MotorController::rotate(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
-        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
-        rightMotor->setMotion(Direction::Drive, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        rightMotor->setMotion(Direction::Drive, CRUISE_SPEED);
     }
     else {
-        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED);
-        rightMotor->setMotion(Direction::Reverse, CRUISE_SPEED / LEFT_TO_RIGHT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        rightMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
     }
 }
 

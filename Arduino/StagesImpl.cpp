@@ -8,13 +8,17 @@ IStage::IStage(
 ) : logger {logger},
     stateMonitor {stateMonitor},
     motorController {motorController},
-    ledController {ledController} {}
+    ledController {ledController}
+{
+    logger.log("New stage created", LoggerLevel::Info);
+}
 
 IStage::~IStage()
 {
     motorController.goStraight();
     delay(500);
     ledController.stopAmber();
+    logger.log("Stage destroyed", LoggerLevel::Info);
 }
 
 ForwardLineTracing::ForwardLineTracing(
@@ -141,7 +145,7 @@ void ReleaseBlock::loop()
     goForward = false;
     ledController.flashAmber();
     motorController.goStraight(goForward);
-    delay(300);
+    delay(700);
     motorController.release();
     delay(500);
     ledController.stopAmber();
