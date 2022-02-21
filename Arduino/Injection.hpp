@@ -20,19 +20,19 @@ class Injection {
             unsigned long suppressTime = 0
         );
 
-        LineSensor lineSensor;
-
     private:
         MotorController motorController;
         ServoController servoController;
         LEDController ledController;
 
+        LineSensor lineSensor;
         UltrasonicSensor ultrasonicSensor;
         InfraRed infraRed;
 
         ForwardLineTracing* getNewForwardLineTracing();
         Turning* getNewTurning(bool turnLeft);
-        GrabClassifyBlock* getNewGrabClassifyBlock();
+        GrabBlock* getNewGrabBlock();
+        ClassifyBlock* getNewClassifyBlock();
         ReleaseBlock* getNewReleaseBlock();
         ReverseMotion* getNewReverseMotion();
 

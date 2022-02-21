@@ -24,7 +24,7 @@ class IStage {
         );
         virtual void loop();
         IStage *nextStage;
-        ~IStage();
+        virtual ~IStage();
 
     protected:
         Logger &logger;
@@ -66,21 +66,39 @@ class Turning : public IStage {
         bool turnLeft;
 };
 
-class GrabClassifyBlock : public IStage {
+class GrabBlock : public IStage {
     public:
-        GrabClassifyBlock(
+        GrabBlock(
             Logger &logger,
             StateMonitor &stateMonitor,
             MotorController &motorController,
             LEDController &ledController,
-            ServoController &servoController,
-            UltrasonicSensor &ultrasonicSensor
+            ServoController &servoController
         );
         void loop();
 
     private:
         ServoController &servoController;
+};
+
+class ClassifyBlock : public IStage {
+    public:
+        ClassifyBlock(
+            Logger &logger,
+            StateMonitor &stateMonitor,
+            MotorController &motorController,
+            ServoController &servoController,
+            LEDController &ledController,
+            UltrasonicSensor &ultrasonicSensor
+        );
+        void loop();
+        ~ClassifyBlock();
+
+    private:
+        ServoController &servoController;
         UltrasonicSensor &ultrasonicSensor;
+        int acceptedCoarseCount;
+        int invalidCount;
 };
 
 class ReleaseBlock : public IStage {

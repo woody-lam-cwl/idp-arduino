@@ -92,20 +92,24 @@ void MotorController::goStraight(bool forward = true)
 {
     if (forward) logger.log("Motor going straight forward", LoggerLevel::DebugHardware);
     else logger.log("Motor going straight backward", LoggerLevel::DebugHardware);
-    leftMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
-    rightMotor->setMotion((forward)? Direction::Drive : Direction::Reverse, CRUISE_SPEED);
+    if (forward) {
+        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED / RIGHT_TO_LEFT_FORWARD_POWER_RATIO);
+        rightMotor->setMotion(Direction::Drive, CRUISE_SPEED);
+    } else {
+        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_BACKWARD_POWER_RATIO);
+        rightMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
+    }
 }
 
 void MotorController::adjustHeading(bool shouldTurnLeft = true)
 {
     if (shouldTurnLeft) {
         logger.log("Motor adjusting to left", LoggerLevel::DebugHardware);
-        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED / RIGHT_TO_LEFT_FORWARD_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED);
-    }
-    else {
+    } else {
         logger.log("Motor adjusting to right", LoggerLevel::DebugHardware);
-        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Drive, ADJUSTMENT_OUTER_SPEED / RIGHT_TO_LEFT_FORWARD_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, ADJUSTMENT_INNER_SPEED);
     }
 }
@@ -114,11 +118,11 @@ void MotorController::rotate(bool shouldTurnLeft = true)
 {
     logger.log("Robot turning", LoggerLevel::DebugHardware);
     if (shouldTurnLeft) {
-        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Reverse, CRUISE_SPEED / RIGHT_TO_LEFT_FORWARD_POWER_RATIO);
         rightMotor->setMotion(Direction::Drive, CRUISE_SPEED);
     }
     else {
-        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED / RIGHT_TO_LEFT_POWER_RATIO);
+        leftMotor->setMotion(Direction::Drive, CRUISE_SPEED / RIGHT_TO_LEFT_FORWARD_POWER_RATIO);
         rightMotor->setMotion(Direction::Reverse, CRUISE_SPEED);
     }
 }
@@ -215,8 +219,9 @@ void LEDController::toggleLED(Color color, bool state)
     }
 }
 
-void LEDController::turnOnBlockLED(Color color)
+void LEDController::toggleOnBlockLED(Color color)
 {
+    resetBlockLED();
     toggleLED(color, HIGH);
 }
 

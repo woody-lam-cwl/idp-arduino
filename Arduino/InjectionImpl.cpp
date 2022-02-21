@@ -25,8 +25,12 @@ IStage* Injection::getNewStage(
             newStage = getNewTurning(turnLeft);
             break;
 
-        case EnumStage::GrabClassifyBlock:
-            newStage = getNewGrabClassifyBlock();
+        case EnumStage::GrabBlock:
+            newStage = getNewGrabBlock();
+            break;
+
+        case EnumStage::ClassifyBlock:
+            newStage = getNewClassifyBlock();
             break;
 
         case EnumStage::ReleaseBlock:
@@ -103,14 +107,25 @@ Turning* Injection::getNewTurning(bool turnLeft = true)
     );
 }
 
-GrabClassifyBlock* Injection::getNewGrabClassifyBlock()
+GrabBlock* Injection::getNewGrabBlock()
 {
-    return new GrabClassifyBlock(
+    return new GrabBlock(
         logger,
         stateMonitor,
         motorController,
         ledController,
+        servoController
+    );
+}
+
+ClassifyBlock* Injection::getNewClassifyBlock()
+{
+    return new ClassifyBlock(
+        logger,
+        stateMonitor,
+        motorController,
         servoController,
+        ledController,
         ultrasonicSensor
     );
 }

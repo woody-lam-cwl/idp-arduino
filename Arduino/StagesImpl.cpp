@@ -20,8 +20,8 @@ void IStage::loop()
 IStage::~IStage()
 {
     motorController.neutral();
-    delay(500);
     ledController.stopAmber();
+    delay(500);
     logger.log("Stage loop times: " + String(loopTimes), LoggerLevel::DebugStage);
     unsigned long stageDuration = millis() - startTime;
     logger.log("Stage duration: " + String(stageDuration), LoggerLevel::DebugStage);
@@ -117,28 +117,59 @@ void Turning::loop()
     motorController.rotate(turnLeft);
 }
 
-GrabClassifyBlock::GrabClassifyBlock(
+GrabBlock::GrabBlock(
     Logger &logger,
     StateMonitor &stateMonitor,
     MotorController &motorController,
     LEDController &ledController,
-    ServoController &servoController,
-    UltrasonicSensor &ultrasonicSensor
+    ServoController &servoController
 ) : IStage(logger, stateMonitor, motorController, ledController),
-    servoController {servoController},
-    ultrasonicSensor {ultrasonicSensor}
+    servoController {servoController}
 {
-    logger.log("Starting grabbing and classifying block stage", LoggerLevel::Info);
+    logger.log("Starting grabbing stage", LoggerLevel::Info);
 }
 
-void GrabClassifyBlock::loop()
+void GrabBlock::loop()
 {
     IStage::loop();
     servoController.grab();
+}
+
+ClassifyBlock::ClassifyBlock(
+    Logger &logger,
+    StateMonitor &stateMonitor,
+    MotorController &motorController,
+    ServoController &servoController,
+    LEDController &ledController,
+    UltrasonicSensor &ultrasonicSensor
+) : IStage(logger, stateMonitor, motorController, ledController),
+    servoController {servoController},
+    ultrasonicSensor {ultrasonicSensor},
+    acceptedCoarseCount {0},
+    invalidCount {0}
+{
+    logger.log("Starting classifying stage", LoggerLevel::Info);
+}
+
+void ClassifyBlock::loop()
+{
+    IStage::loop();
+    servoController.release();
     unsigned long distanceInMM = ultrasonicSensor.getDistanceInMM();
-    BlockType blockType = (distanceInMM < ULTRASONIC_THRESHOLD)? BlockType::CoarseBlock : BlockType::FineBlock;
+    if (distanceInMM < ULTRASONIC_THRESHOLD && distanceInMM > ULTRASONIC_LOWER_BOUND) {
+        acceptedCoarseCount++;
+    } else if (distanceInMM > ULTRASONIC_UPPER_BOUND) {
+        invalidCount++;
+    }
+}
+
+ClassifyBlock::~ClassifyBlock()
+{
+    bool isCoarseBlock = acceptedCoarseCount > (loopTimes - invalidCount) * 0.4;
+    if (invalidCount > loopTimes * 0.8) isCoarseBlock = false;
+    BlockType blockType = (isCoarseBlock)? BlockType::CoarseBlock : BlockType::FineBlock;
     stateMonitor.blockType.updateState(blockType);
-    ledController.turnOnBlockLED((blockType == BlockType::CoarseBlock)? Color::Red : Color::Green);
+    ledController.toggleOnBlockLED((blockType == BlockType::CoarseBlock)? Color::Red : Color::Green);
 }
 
 ReleaseBlock::ReleaseBlock(
@@ -156,24 +187,29 @@ ReleaseBlock::ReleaseBlock(
 void ReleaseBlock::loop()
 {
     IStage::loop();
+    servoController.release();
     bool goForward = true;
-    ledController.flashAmber();
-    motorController.goStraight(goForward);
-    delay(300);
+    unsigned long startTime;
+    startTime = millis();
+    while (millis() - startTime < 1000) {
+        ledController.flashAmber();
+        motorController.goStraight(goForward);   
+    }
+    ledController.stopAmber();
     motorController.neutral();
     delay(500);
-    ledController.stopAmber();
 
-    servoController.release();
     ledController.resetBlockLED();
 
     goForward = false;
-    ledController.flashAmber();
-    motorController.goStraight(goForward);
-    delay(700);
+    startTime = millis();
+    while (millis() - startTime < 1000) {
+        ledController.flashAmber();
+        motorController.goStraight(goForward);   
+    }
+    ledController.stopAmber();
     motorController.neutral();
     delay(500);
-    ledController.stopAmber();
 }
 
 ReverseMotion::ReverseMotion(

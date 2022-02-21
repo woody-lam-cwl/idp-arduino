@@ -36,7 +36,8 @@ enum class BlockType : byte {
 enum class EnumStage : byte {
     ForwardLineTracing,
     Turning,
-    GrabClassifyBlock,
+    GrabBlock,
+    ClassifyBlock,
     ReleaseBlock,
     ReverseMotion
 };

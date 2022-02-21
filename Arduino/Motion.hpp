@@ -76,7 +76,7 @@ class LEDController {
         );
         void flashAmber();
         void stopAmber();
-        void turnOnBlockLED(Color color);
+        void toggleOnBlockLED(Color color);
         void resetBlockLED();
 
     private:
